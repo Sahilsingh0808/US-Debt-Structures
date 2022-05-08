@@ -29,7 +29,15 @@ year=2020 #change year here
 state="alaska" #change state here
 path ="/home/sahilsingh/Documents/oliver/2020"
 dataCopy=pd.DataFrame()
-finalData=pd.DataFrame(columns=['Due Year','State','Table ID','Principal','Interest','Swap Net Payment','Total'])
+dataBefore=pd.DataFrame()
+tableIDList=[]
+tableBefore=False
+tableIDBefore=""
+indexBefore=0
+idType=[]
+tableType=[]
+res = {}
+finalData=pd.DataFrame(columns=['Due Year','State','Table ID','Table Category','Principal','Interest','Swap Net Payment','Total'])
 
 """***Functions***
 
@@ -455,24 +463,17 @@ def format_headings(headings):
 
 """Format Headings"""
 
-def tableCategory(data,newcolsdict,numberTables,loc):
+def tableCategory(data,newcolsdict,headings,numberTables,tableBefore,dataBefore,loc):
+    newcolsdict = zip(newcolsdict.values())
+    newcolsdict=list(newcolsdict)
+    newcolsdict = [''.join(i) for i in newcolsdict]
     first=newcolsdict[0]
-    category=""
+    category=''
+    print(headings)
+    print("HEADINGS")
 
-    for i in range(len(newcolsdict)):
-        newcolsdict[i]=newcolsdict[i].lower()
-        if newcolsdict[i].lower()=="principal":
-            del newcolsdict[i]
-        elif newcolsdict[i].lower()=="interest":
-            del newcolsdict[i]
-        elif newcolsdict[i].lower()=="total":
-            del newcolsdict[i]
-        elif newcolsdict[i].lower()=="swap net payment":
-            del newcolsdict[i]
-    print(newcolsdict)
-
-    if numberTables==1:
-        df=data.to_string()
+    if tableBefore==True:
+        df=dataBefore.to_string()
         df=df.lower()
         general=df.find("general")
         revenue=df.find("revenue")
@@ -480,6 +481,7 @@ def tableCategory(data,newcolsdict,numberTables,loc):
         capital=df.find("capital")
         certificates=df.find("certificates")
         components=df.find("components")
+        debt=df.find("debt")
         if general!=-1:
             category= "General Obligation Bonds"
         elif revenue!=-1:
@@ -492,6 +494,73 @@ def tableCategory(data,newcolsdict,numberTables,loc):
             category= "Certificates of Participation"
         elif components!=-1:
             category= "Components Units"
+        elif debt!=-1:
+            category="Debt Service Requirements"
+
+    for i in range(len(headings)):
+        con=headings[i].lower()
+        general=con.find("general")
+        revenue=con.find("revenue")
+        operating=con.find("operating")
+        capital=con.find("capital")
+        certificates=con.find("certificates")
+        components=con.find("components")
+        debt=con.find("debt")
+        if general!=-1:
+            category= "General Obligation Bonds"
+        elif revenue!=-1:
+            category= "Revenue Bonds"
+        elif operating!=-1:
+            category= "Operating Leases"
+        elif capital!=-1:
+            category= "Capital Leases"
+        elif certificates!=-1:
+            category= "Certificates of Participation"
+        elif components!=-1:
+            category= "Components Units"
+        elif debt!=-1:
+            category="Debt Service Requirements"
+
+
+    for i in range(len(newcolsdict)):
+        try:
+            fir=newcolsdict[i].lower()
+            if "principal" in fir:
+                del newcolsdict[i]
+            elif "interest" in fir:
+                del newcolsdict[i]
+            elif "total" in fir:
+                del newcolsdict[i]
+            elif "swap net payment" in fir:
+                del newcolsdict[i]
+        except:
+            print("ERROR")
+    print(newcolsdict)
+
+    if numberTables==1:
+        df=data.to_string()
+        df=df.lower()
+        general=df.find("general")
+        revenue=df.find("revenue")
+        operating=df.find("operating")
+        capital=df.find("capital")
+        certificates=df.find("certificates")
+        components=df.find("components")
+        debt=df.find("debt")
+        if general!=-1:
+            category= "General Obligation Bonds"
+        elif revenue!=-1:
+            category= "Revenue Bonds"
+        elif operating!=-1:
+            category= "Operating Leases"
+        elif capital!=-1:
+            category= "Capital Leases"
+        elif certificates!=-1:
+            category= "Certificates of Participation"
+        elif components!=-1:
+            category= "Components Units"
+        elif debt!=-1:
+            category="Debt Service Requirements"
 
         if category=="":
             for i in range(len(newcolsdict)):
@@ -502,8 +571,8 @@ def tableCategory(data,newcolsdict,numberTables,loc):
         j=0
         x=""
         for i in range(len(newcolsdict)):
-                if newcolsdict[i] !='':
-                    if j==i:
+                if newcolsdict[i] !='' and len(newcolsdict[i])>4:
+                    if loc==i:
                         category1=newcolsdict[i]
                         x=category1
                         general=category1.find("general")
@@ -526,7 +595,12 @@ def tableCategory(data,newcolsdict,numberTables,loc):
                             category= "Components Units"
                     j+=1
         if category=='':
-            category=x
+            if x!='':
+                category=x
+            else:
+                category=first
+    if category=='':
+        category="Not Available"
     return category
 
 
@@ -555,16 +629,45 @@ for i in range(len(filenames)):
     with open(f"/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2018/dataout/{filenames[i]}", 'rb') as f:
         data = pickle.load(f)
         table_id=get_table_id(filenames[i])
+        tableIDList.append(table_id)
         tables.append(data)
+        with open('/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2018/doc/ak_state_of_alaska_2018_tabledirectory.pkl', 'rb') as f:
+            data1 = pickle.load(f)
+            idType=data1['id'].to_list()
+            tableType=data1['type'].to_list()
+            for key in idType:
+                for value in tableType:
+                    res[key] = value
+                    tableType.remove(value)
+                    break 
         d_mattable=identify_table(data, year, threshold = .2)
         filename_array=filenames[i].split("_")
         filename_array[3]=filename_array[3].capitalize()
+        filename_temp=filename_array[:-4]
+        filename_templ=""
+        for i in filename_temp:
+            filename_templ+=i+"_"
         if (filename_array[4])[0]=="2":
             state=filename_array[3]
         else:
             filename_array[4]=filename_array[4].capitalize()
             state=filename_array[3]+" "+filename_array[4]
         if d_mattable:
+            
+            if tableIDList.index(table_id)>0:
+                indexBefore=idType.index(table_id)+1
+                tableIDBefore=idType[indexBefore]
+                tableTypeBefore=res[tableIDBefore]
+                if tableTypeBefore=='title':
+                    tableBefore=True
+                else:
+                    tableBefore=False
+                filename_templ+=tableIDBefore+"_c.pkl"
+                filename_templ=filename_templ.lower()
+                with open(f"/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2018/dataout/{filename_templ}", 'rb') as f:
+                    dataBefore = pickle.load(f)
+                print(tableIDBefore)
+                print(tableIDList)
 
             #repair index
             data=repair_dfindex(data)
@@ -663,7 +766,7 @@ for i in range(len(filenames)):
                 while("" in headings) :
                     headings.remove("")
 
-                print(headings)
+                headingsRaw=headings.copy()
 
                 for i in range(0,len(headings)):
                     head=str(headings[i])
@@ -699,6 +802,7 @@ for i in range(len(filenames)):
 
                 headings=format_headings(headings)
                 print(headings)
+                print("FORMATTED HEADINGS")
 
 
                 if(len(data.columns)==columnCount):
@@ -724,20 +828,24 @@ for i in range(len(filenames)):
                         numberTables+=1
                     
                     if x.empty==False:
+                        table_category=tableCategory(data,newcolsdict,headingsRaw,numberTables,tableBefore,dataBefore,0)
                         x.insert(loc=0, column='Due Year', value=yearsCol)
                         x.insert(loc=0, column='State', value=state)
                         x.insert(loc=0, column='Table ID', value=table_id)
+                        x.insert(loc=0, column='Table Category', value=table_category)
                         finalData=pd.concat((finalData, x), axis=0)
-                        table_category=tableCategory(data,newcolsdict,numberTables,0)
                         print(table_category)
+                        print(numberTables)
                         print(x)
                         print("FINAL DATA")
                     if y.empty==False:
+                        table_category=tableCategory(data,newcolsdict,headingsRaw,numberTables,tableBefore,dataBefore,1)
                         y.insert(loc=0, column='Due Year', value=yearsCol)
                         y.insert(loc=0, column='State', value=state)
                         y.insert(loc=0, column='Table ID', value=table_id)
-                        table_category=tableCategory(data,newcolsdict,numberTables,1)
+                        y.insert(loc=0, column='Table Category', value=table_category)
                         print(table_category)
+                        print(numberTables)
                         finalData=pd.concat((finalData, y), axis=0)
                         print(y)
                         
@@ -757,28 +865,34 @@ for i in range(len(filenames)):
                             numberTables+=1
                         
                         if x.empty==False:
+                            table_category=tableCategory(data,newcolsdict,headingsRaw,numberTables,tableBefore,dataBefore,0)
                             x.insert(loc=0, column='Due Year', value=yearsCol)
                             x.insert(loc=0, column='State', value=state)
                             x.insert(loc=0, column='Table ID', value=table_id)
-                            table_category=tableCategory(data,newcolsdict,numberTables,0)
+                            x.insert(loc=0, column='Table Category', value=table_category)
                             print(table_category)
+                            print(numberTables)
                             finalData=pd.concat((finalData, x), axis=0)
                             print(x)
                         if y.empty==False:
+                            table_category=tableCategory(data,newcolsdict,headingsRaw,numberTables,tableBefore,dataBefore,1)
                             y.insert(loc=0, column='Due Year', value=yearsCol)
                             y.insert(loc=0, column='State', value=state)
                             y.insert(loc=0, column='Table ID', value=table_id)
-                            table_category=tableCategory(data,newcolsdict,numberTables,1)
+                            y.insert(loc=0, column='Table Category', value=table_category)
                             print(table_category)
+                            print(numberTables)
                             finalData=pd.concat((finalData, y), axis=0)
                             print(y)
                     
                     if z.empty==False:
+                        table_category=tableCategory(data,newcolsdict,headingsRaw,numberTables,tableBefore,dataBefore,2)
                         z.insert(loc=0, column='Due Year', value=yearsCol)
                         z.insert(loc=0, column='State', value=state)
                         z.insert(loc=0, column='Table ID', value=table_id)
-                        table_category=tableCategory(data,newcolsdict,numberTables,2)
+                        z.insert(loc=0, column='Table Category', value=table_category)
                         print(table_category)
+                        print(numberTables)
                         finalData=pd.concat((finalData, z), axis=0)
                         numberTables+=1
                         print(z) 
