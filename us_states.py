@@ -25,11 +25,11 @@ import tabula
 """Declarations"""
 
 tables = []
-index=0
+index = 0
 
-year = 2020  # change year here
+year = 2018  # change year here
 state = "alaska"  # change state here
-path = "/home/sahilsingh/Documents/oliver/2020"
+path = "/home/sahilsingh/Documents/oliver/"+str(year)
 dataCopy = pd.DataFrame()
 dataBefore = pd.DataFrame()
 tableIDList = []
@@ -643,7 +643,7 @@ def tableCategory(data, newcolsdict, headings, numberTables, tableBefore, dataBe
 """Filenames"""
 
 filenames = next(walk(
-    r'/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2020/dataout/'), (None, None, []))[2]
+    r'/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/'+str(year)+'/dataout/'), (None, None, []))[2]
 print(len(filenames))
 
 
@@ -663,12 +663,21 @@ filenames = list(filter(None, filenames))
 """Final Algorithm"""
 
 for i in range(len(filenames)):
-    with open(f"/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2020/dataout/{filenames[i]}", 'rb') as f:
+    with open(f"/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/{str(year)}/dataout/{filenames[i]}", 'rb') as f:
         data = pickle.load(f)
         table_id = get_table_id(filenames[i])
         tableIDList.append(table_id)
         tables.append(data)
-        with open(f'/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2020/doc/ak_state_of_alaska_2020_tabledirectory.pkl', 'rb') as f:
+        # filenames1 = next(walk(
+        #     r'home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/'+str(year)+'/doc'), (None, None, []))[2]
+        # doc=""
+        # print(filenames1)
+        # for j in range(len(filenames1)):
+        #     if state in filenames1[j]:
+        #         doc = filenames1[j]
+        #         break
+        # print(doc)
+        with open(f'/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/{str(year)}/doc/ak_state_of_alaska_2018_tabledirectory.pkl', 'rb') as f:
             data1 = pickle.load(f)
             idType = data1['id'].to_list()
             tableType = data1['type'].to_list()
@@ -700,7 +709,7 @@ for i in range(len(filenames)):
                     tableBefore = False
                 filename_templ += tableIDBefore+"_c.pkl"
                 filename_templ = filename_templ.lower()
-                with open(f"/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2020/dataout/{filename_templ}", 'rb') as f:
+                with open(f"/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/{str(year)}/dataout/{filename_templ}", 'rb') as f:
                     dataBefore = pickle.load(f)
                 print(tableIDBefore)
                 print(tableIDList)
