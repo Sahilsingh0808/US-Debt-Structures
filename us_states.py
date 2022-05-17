@@ -11,6 +11,7 @@ Import Sets
 
 import pickle
 from os import walk
+from pyexpat.errors import codes
 from matplotlib import table
 import pandas as pd
 import os
@@ -26,10 +27,112 @@ import tabula
 
 tables = []
 index = 0
+states = ["north_carolina",
+          "nevada",
+          "illinois",
+          "new_mexico",
+          "connecticut",
+          "colorado",
+          "oregon",
+          "louisiana",
+          "idaho",
+          "florida",
+          "kansas",
+          "california",
+          "south_dakota",
+          "alabama",
+          'massachusetts',
+          "oklahoma",
+          "north_dakota",
+          "tennessee",
+          "mississippi",
+          "wyoming",
+          "michigan",
+          "maine",
+          "virginia",
+          "arkansas",
+          "kentucky",
+          "indiana",
+          "montana",
+          "west_virginia",
+          "ohio",
+          "rhode_island",
+          "new_york",
+          "utah",
+          "delaware",
+          "georgia",
+          "missouri",
+          "maryland",
+          "arizona",
+          "nebraska",
+          "washington",
+          'texas',
+          "new_hampshire",
+          "minnesota",
+          "south_carolina",
+          "pennsylvania",
+          "new_jersey",
+          "vermont",
+          "wisconsin",
+          "district_of_columbia",
+          "hawaii",
+          "alaska"]
+codes = ["nc_state_of_north_carolina_",
+        "nv_state_of_nevada_",
+        "il_state_of_illinois_",
+        "nm_state_of_new_mexico_",
+        "ct_state_of_connecticut_",
+        "co_state_of_colorado_",
+        "or_state_of_oregon_",
+        "la_state_of_louisiana_",
+        "id_state_of_idaho_",
+        "fl_state_of_florida_",
+        "ar_state_of_arkansas_",
+        "ca_state_of_california_",
+        "sd_state_of_south_dakota_",
+        "al_state_of_alabama_",
+        "ma_state_of_massachusetts_",
+        "ok_state_of_oklahoma_",
+        "nd_state_of_north_dakota_",
+        "tn_state_of_tennessee_",
+        "ms_state_of_mississippi_",
+        "wy_state_of_wyoming_",
+        "mi_state_of_michigan_",
+        "me_state_of_maine_",
+        "wv_state_of_west_virginia_",
+        "ar_state_of_arkansas_",
+        "ky_state_of_kentucky_",
+        "in_state_of_indiana_",
+        "mt_state_of_montana_",
+        "wv_state_of_west_virginia_",
+        "oh_state_of_ohio_",
+        "ri_state_of_rhode_island_",
+        "ny_state_of_new_york_",
+        "ut_state_of_utah_",
+        "de_state_of_delaware_",
+        "ga_state_of_georgia_",
+        "mo_state_of_missouri_"
+        "md_state_of_maryland_",
+        "az_state_of_arizona_",
+        "ne_state_of_nebraska_",
+        "wa_state_of_washington_",
+        "tx_state_of_texas_",
+        "nh_state_of_new_hampshire_",
+        "mn_state_of_minnesota_",
+        "sc_state_of_south_carolina_",
+        "pa_state_of_pennsylvania_",
+        "nj_state_of_new_jersey_",
+        "vt_state_of_vermont_",
+        "wi_state_of_wisconsin_",
+        "dc_state_of_district_of_columbia_",
+        "hi_state_of_hawaii_",
+        "ak_state_of_alaska_"]
 
 year = 2018  # change year here
 state = "alaska"  # change state here
 path = "/home/sahilsingh/Documents/oliver/"+str(year)
+path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
+# make a central path
 dataCopy = pd.DataFrame()
 dataBefore = pd.DataFrame()
 tableIDList = []
@@ -643,268 +746,238 @@ def tableCategory(data, newcolsdict, headings, numberTables, tableBefore, dataBe
 """Filenames"""
 
 filenames = next(walk(
-    r'/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/'+str(year)+'/dataout/'), (None, None, []))[2]
+    r''+path1+str(year)+'/dataout/'), (None, None, []))[2]
 print(len(filenames))
 
 
 """Restricting to a particular state"""
+for ll in range(len(states)):
+    state=states[ll]
+    code=codes[ll]
+    for i in range(0, len(filenames)):
+        try:
+            if state in str(filenames[i]):
+                continue
+            else:
+                filenames[i] = None
+        except:
+            pass
+    filenames = list(filter(None, filenames))
 
-for i in range(0, len(filenames)):
-    try:
-        if state in str(filenames[i]):
-            continue
-        else:
-            filenames[i] = None
-    except:
-        pass
-filenames = list(filter(None, filenames))
 
+    """Final Algorithm"""
 
-"""Final Algorithm"""
-
-for i in range(len(filenames)):
-    with open(f"/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/{str(year)}/dataout/{filenames[i]}", 'rb') as f:
-        data = pickle.load(f)
-        table_id = get_table_id(filenames[i])
-        tableIDList.append(table_id)
-        tables.append(data)
-        # filenames1 = next(walk(
-        #     r'home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/'+str(year)+'/doc'), (None, None, []))[2]
-        # doc=""
-        # print(filenames1)
-        # for j in range(len(filenames1)):
-        #     if state in filenames1[j]:
-        #         doc = filenames1[j]
-        #         break
-        # print(doc)
-        with open(f'/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/{str(year)}/doc/ak_state_of_alaska_2018_tabledirectory.pkl', 'rb') as f:
-            data1 = pickle.load(f)
-            idType = data1['id'].to_list()
-            tableType = data1['type'].to_list()
-            for key in idType:
-                for value in tableType:
-                    res[key] = value
-                    tableType.remove(value)
-                    break
-        d_mattable = identify_table(data, year, threshold=.2)
-        filename_array = filenames[i].split("_")
-        filename_array[3] = filename_array[3].capitalize()
-        filename_temp = filename_array[:-4]
-        filename_templ = ""
-        for i in filename_temp:
-            filename_templ += i+"_"
-        if (filename_array[4])[0] == "2":
-            state = filename_array[3]
-        else:
-            filename_array[4] = filename_array[4].capitalize()
-            state = filename_array[3]+" "+filename_array[4]
-        if d_mattable:
-            if tableIDList.index(table_id) > 0:
-                indexBefore = idType.index(table_id)+1
-                tableIDBefore = idType[indexBefore]
-                tableTypeBefore = res[tableIDBefore]
-                if tableTypeBefore == 'title':
-                    tableBefore = True
-                else:
-                    tableBefore = False
-                filename_templ += tableIDBefore+"_c.pkl"
-                filename_templ = filename_templ.lower()
-                with open(f"/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/{str(year)}/dataout/{filename_templ}", 'rb') as f:
-                    dataBefore = pickle.load(f)
-                print(tableIDBefore)
-                print(tableIDList)
-
-            # repair index
-            data = repair_dfindex(data)
-            print(data)
-
-            dataCopy = data
-
-            # column headers
-            headings = get_headings(data)
-
-            newcolsdict = get_colheader(data, camelot=True)
-
-            # print(data)
-            print(newcolsdict)
-            print(table_id)
-
-            # print whole table
-            with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-
-                numberTables = 0
-                # delete a completely empty row
-                delete_empty_rows(data)
-                rowC = data.shape[0]
-                colC = len(data.columns)
-                data_list = data.values.tolist()
-
-                # ignoring the starting useless rows of the dataframe
-                for i in range(0, len(data_list)):
-                    for j in range(0, len(data_list[i])):
-                        cell = str(data_list[i][j])
-                        if "Year" in cell or "year" in cell:
-                            data = (data.iloc[i+1:, ])
-                            # print(data)
-                            break
-
-                data = repair_dfindex(data)
-                data = data.reset_index(drop=True)
-
-                # ignoring the ending useless rows of the dataframe
-                data_list = data.values.tolist()
-                for i in range(0, len(data_list)):
-                    for j in range(0, len(data_list[i])):
-                        cell = str(data_list[i][j])
-                        if "Total" in cell or "total" in cell:
-                            data = (data.iloc[:i, ])
-                            break
-
-                data = delete_empty_rows_values(data)
-
-                for i in range(0, len(data.columns)):
-                    for j in range(0, data.shape[0]):
-                        try:
-                            cell = (data[i][j])
-                            if(pd.isnull(cell)) or cell == '\n':
-                                data[i][j] = np.nan
-                            if ord(cell) == 8212 or ord(cell) == 36:
-                                data[i][j] = np.nan
-                        except:
-                            pass
-
-                data = correct_numbers_table(data)
-                data = interpolate(data)
-
-                # mattype=[]
-                # for i in range(0,data.shape[0]):
-                #     mattype.append("year")
-                # data["mattype"]=mattype
-
-                # convert entries to float
-                data = data.astype(float)
-
-                # format headings name
-
-                # if newcolsdict[0]=="":
-                #     newcolsdict[0]="Year"
-                # x=newcolsdict.values()
-                # data.columns=list(x)
-
-                principalCount = 0
-                interestCount = 0
-                totalCount = 0
-                otherCount = 0
-                swapCount = 0
-
-                principalIndex = []
-                interestIndex = []
-                totalIndex = []
-                otherIndex = []
-                swapIndex = []
-
-                data = delete_empty_columns(data, headings)
-
-                while("" in headings):
-                    headings.remove("")
-
-                headingsRaw = headings.copy()
-
-                for i in range(0, len(headings)):
-                    head = str(headings[i])
-                    head = head.lower()
-                    if head == "" or head == "\n":
-                        continue
-                    elif "principal" in head:
-                        principalCount += 1
-                        principalIndex.append(i)
-                    elif "interest" in head:
-                        interestCount += 1
-                        interestIndex.append(i)
-                    elif "total" in head:
-                        totalCount += 1
-                        totalIndex.append(i)
-                    elif "swap" in head or "net" in head:
-                        swapCount += 1
-                        swapIndex.append(i)
+    for i in range(len(filenames)):
+        with open(f''+path1+str(year)+'/dataout/'+filenames[i], 'rb') as f:
+            data = pickle.load(f)
+            table_id = get_table_id(filenames[i])
+            tableIDList.append(table_id)
+            tables.append(data)
+            # filenames1 = next(walk(
+            #     r'home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/'+str(year)+'/doc'), (None, None, []))[2]
+            # doc=""
+            # print(filenames1)
+            # for j in range(len(filenames1)):
+            #     if state in filenames1[j]:
+            #         doc = filenames1[j]
+            #         break
+            # print(doc)
+            with open(f''+path1+str(year)+'/doc/'+codes[ll]+str(year)+'_tabledirectory.pkl', 'rb') as f:
+                data1 = pickle.load(f)
+                idType = data1['id'].to_list()
+                tableType = data1['type'].to_list()
+                for key in idType:
+                    for value in tableType:
+                        res[key] = value
+                        tableType.remove(value)
+                        break
+            d_mattable = identify_table(data, year, threshold=.2)
+            filename_array = filenames[i].split("_")
+            filename_array[3] = filename_array[3].capitalize()
+            filename_temp = filename_array[:-4]
+            filename_templ = ""
+            for i in filename_temp:
+                filename_templ += i+"_"
+            if (filename_array[4])[0] == "2":
+                state = filename_array[3]
+            else:
+                filename_array[4] = filename_array[4].capitalize()
+                state = filename_array[3]+" "+filename_array[4]
+            if d_mattable:
+                if tableIDList.index(table_id) > 0:
+                    print(state)
+                    indexBefore = idType.index(table_id)+1
+                    tableIDBefore = idType[indexBefore]
+                    tableTypeBefore = res[tableIDBefore]
+                    if tableTypeBefore == 'title':
+                        tableBefore = True
                     else:
-                        otherCount += 1
-                        otherIndex.append(i)
+                        tableBefore = False
+                    filename_templ += tableIDBefore+"_c.pkl"
+                    filename_templ = filename_templ.lower()
+                    with open(f""+path1+str(year)+"/dataout/"+filename_templ, 'rb') as f:
+                        dataBefore = pickle.load(f)
+                    print(tableIDBefore)
+                    print(tableIDList)
 
-                columnCount = principalCount+interestCount+totalCount+otherCount+swapCount
-                if(len(data.columns) == columnCount):
-                    print("MATCHES")
-                else:
-                    extra = len(data.columns)-columnCount
-                    data = delete_empty_columns_extra(data, extra)
-                print(len(data.columns))
-                print(principalCount, interestCount,
-                      swapCount, totalCount, otherCount)
+                # repair index
+                data = repair_dfindex(data)
+                print(data)
 
-                headings = format_headings(headings)
-                print(headings)
-                print("FORMATTED HEADINGS")
+                dataCopy = data
 
-                if(len(data.columns) == columnCount):
-                    data.columns = headings
+                # column headers
+                headings = get_headings(data)
 
-                yearsCol = data.iloc[:, 0]
+                newcolsdict = get_colheader(data, camelot=True)
 
-                principalInd = []
-                for i in range(0, len(headings)):
-                    if "Principal" in headings[i]:
-                        principalInd.append(i)
+                # print(data)
+                print(newcolsdict)
+                print(table_id)
 
-                print(principalInd)
+                # print whole table
+                with pd.option_context('display.max_rows', None, 'display.max_columns', None):
 
-                data = data.iloc[:, 1:]
+                    numberTables = 0
+                    # delete a completely empty row
+                    delete_empty_rows(data)
+                    rowC = data.shape[0]
+                    colC = len(data.columns)
+                    data_list = data.values.tolist()
 
-                if len(principalInd) == 1:
-                    x = data.iloc[:, :principalInd[0]-1]
-                    y = data.iloc[:, principalInd[0]-1:]
-                    if(x.empty == False):
-                        numberTables += 1
-                    if(y.empty == False):
-                        numberTables += 1
+                    # ignoring the starting useless rows of the dataframe
+                    for i in range(0, len(data_list)):
+                        for j in range(0, len(data_list[i])):
+                            cell = str(data_list[i][j])
+                            match = re.match(r'.*([1-3][0-9]{3})', cell)
+                            if match is not None:
+                            # if "Year" in cell or "year" in cell:
+                                data = (data.iloc[i:, ])
+                                # print(data)
+                                break
+                    try:
+                        data = repair_dfindex(data)
+                        data = data.reset_index(drop=True)
+                    except:
+                        print("error")
 
-                    if x.empty == False:
-                        table_category = tableCategory(
-                            data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
-                        x.insert(loc=0, column='Due Year', value=yearsCol)
-                        x.insert(loc=0, column='State', value=state)
-                        x.insert(loc=0, column='Table ID', value=table_id)
-                        x.insert(loc=0, column='Table Category',
-                                 value=table_category)
-                        finalData = pd.concat((finalData, x), axis=0)
-                        print(table_category)
-                        print(numberTables)
-                        print(x)
-                        print("FINAL DATA")
-                    if y.empty == False:
-                        table_category = tableCategory(
-                            data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
-                        y.insert(loc=0, column='Due Year', value=yearsCol)
-                        y.insert(loc=0, column='State', value=state)
-                        y.insert(loc=0, column='Table ID', value=table_id)
-                        y.insert(loc=0, column='Table Category',
-                                 value=table_category)
-                        print(table_category)
-                        print(numberTables)
-                        finalData = pd.concat((finalData, y), axis=0)
-                        print(y)
+                    # ignoring the ending useless rows of the dataframe
+                    data_list = data.values.tolist()
+                    for i in range(0, len(data_list)):
+                        for j in range(0, len(data_list[i])):
+                            cell = str(data_list[i][j])
+                            if "Total" in cell or "total" in cell:
+                                data = (data.iloc[:i, ])
+                                break
 
-                else:
-                    for i in range(0, len(principalInd)-1):
-                        a = principalInd[i]
-                        b = principalInd[i+1]
-                        x = data.iloc[:, :a-1]
-                        y = data.iloc[:, a-1:b-1]
-                        z = data.iloc[:, principalInd[-1]-1:]
+                    data = delete_empty_rows_values(data)
+
+                    for i in range(0, len(data.columns)):
+                        for j in range(0, data.shape[0]):
+                            try:
+                                cell = (data[i][j])
+                                if(pd.isnull(cell)) or cell == '\n':
+                                    data[i][j] = np.nan
+                                if ord(cell) == 8212 or ord(cell) == 36:
+                                    data[i][j] = np.nan
+                            except:
+                                pass
+
+                    data = correct_numbers_table(data)
+                    try:    
+                        data = interpolate(data)
+                    except:
+                        print("error")
+
+                    # mattype=[]
+                    # for i in range(0,data.shape[0]):
+                    #     mattype.append("year")
+                    # data["mattype"]=mattype
+
+                    # convert entries to float
+                    data = data.astype(float)
+
+                    # format headings name
+
+                    # if newcolsdict[0]=="":
+                    #     newcolsdict[0]="Year"
+                    # x=newcolsdict.values()
+                    # data.columns=list(x)
+
+                    principalCount = 0
+                    interestCount = 0
+                    totalCount = 0
+                    otherCount = 0
+                    swapCount = 0
+
+                    principalIndex = []
+                    interestIndex = []
+                    totalIndex = []
+                    otherIndex = []
+                    swapIndex = []
+
+                    data = delete_empty_columns(data, headings)
+
+                    while("" in headings):
+                        headings.remove("")
+
+                    headingsRaw = headings.copy()
+
+                    for i in range(0, len(headings)):
+                        head = str(headings[i])
+                        head = head.lower()
+                        if head == "" or head == "\n":
+                            continue
+                        elif "principal" in head:
+                            principalCount += 1
+                            principalIndex.append(i)
+                        elif "interest" in head:
+                            interestCount += 1
+                            interestIndex.append(i)
+                        elif "total" in head:
+                            totalCount += 1
+                            totalIndex.append(i)
+                        elif "swap" in head or "net" in head:
+                            swapCount += 1
+                            swapIndex.append(i)
+                        else:
+                            otherCount += 1
+                            otherIndex.append(i)
+
+                    columnCount = principalCount+interestCount+totalCount+otherCount+swapCount
+                    if(len(data.columns) == columnCount):
+                        print("MATCHES")
+                    else:
+                        extra = len(data.columns)-columnCount
+                        data = delete_empty_columns_extra(data, extra)
+                    print(len(data.columns))
+                    print(principalCount, interestCount,
+                        swapCount, totalCount, otherCount)
+
+                    headings = format_headings(headings)
+                    print(headings)
+                    print("FORMATTED HEADINGS")
+
+                    if(len(data.columns) == columnCount):
+                        data.columns = headings
+
+                    yearsCol = data.iloc[:, 0]
+
+                    principalInd = []
+                    for i in range(0, len(headings)):
+                        if "Principal" in headings[i]:
+                            principalInd.append(i)
+
+                    print(principalInd)
+
+                    data = data.iloc[:, 1:]
+
+                    if len(principalInd) == 1:
+                        x = data.iloc[:, :principalInd[0]-1]
+                        y = data.iloc[:, principalInd[0]-1:]
                         if(x.empty == False):
                             numberTables += 1
                         if(y.empty == False):
-                            numberTables += 1
-                        if z.empty == False:
                             numberTables += 1
 
                         if x.empty == False:
@@ -914,11 +987,12 @@ for i in range(len(filenames)):
                             x.insert(loc=0, column='State', value=state)
                             x.insert(loc=0, column='Table ID', value=table_id)
                             x.insert(loc=0, column='Table Category',
-                                     value=table_category)
+                                    value=table_category)
+                            finalData = pd.concat((finalData, x), axis=0)
                             print(table_category)
                             print(numberTables)
-                            finalData = pd.concat((finalData, x), axis=0)
                             print(x)
+                            print("FINAL DATA")
                         if y.empty == False:
                             table_category = tableCategory(
                                 data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
@@ -926,29 +1000,68 @@ for i in range(len(filenames)):
                             y.insert(loc=0, column='State', value=state)
                             y.insert(loc=0, column='Table ID', value=table_id)
                             y.insert(loc=0, column='Table Category',
-                                     value=table_category)
+                                    value=table_category)
                             print(table_category)
                             print(numberTables)
                             finalData = pd.concat((finalData, y), axis=0)
                             print(y)
 
-                    if z.empty == False:
-                        table_category = tableCategory(
-                            data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 2)
-                        z.insert(loc=0, column='Due Year', value=yearsCol)
-                        z.insert(loc=0, column='State', value=state)
-                        z.insert(loc=0, column='Table ID', value=table_id)
-                        z.insert(loc=0, column='Table Category',
-                                 value=table_category)
-                        print(table_category)
-                        print(numberTables)
-                        finalData = pd.concat((finalData, z), axis=0)
-                        numberTables += 1
-                        print(z)
+                    else:
+                        for i in range(0, len(principalInd)-1):
+                            a = principalInd[i]
+                            b = principalInd[i+1]
+                            x = data.iloc[:, :a-1]
+                            y = data.iloc[:, a-1:b-1]
+                            z = data.iloc[:, principalInd[-1]-1:]
+                            if(x.empty == False):
+                                numberTables += 1
+                            if(y.empty == False):
+                                numberTables += 1
+                            if (z.empty == False):
+                                numberTables += 1
+
+                            if x.empty == False:
+                                table_category = tableCategory(
+                                    data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
+                                x.insert(loc=0, column='Due Year', value=yearsCol)
+                                x.insert(loc=0, column='State', value=state)
+                                x.insert(loc=0, column='Table ID', value=table_id)
+                                x.insert(loc=0, column='Table Category',
+                                        value=table_category)
+                                print(table_category)
+                                print(numberTables)
+                                finalData = pd.concat((finalData, x), axis=0)
+                                print(x)
+                            if y.empty == False:
+                                table_category = tableCategory(
+                                    data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
+                                y.insert(loc=0, column='Due Year', value=yearsCol)
+                                y.insert(loc=0, column='State', value=state)
+                                y.insert(loc=0, column='Table ID', value=table_id)
+                                y.insert(loc=0, column='Table Category',
+                                        value=table_category)
+                                print(table_category)
+                                print(numberTables)
+                                finalData = pd.concat((finalData, y), axis=0)
+                                print(y)
+
+                            if z.empty == False:
+                                table_category = tableCategory(
+                                    data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 2)
+                                z.insert(loc=0, column='Due Year', value=yearsCol)
+                                z.insert(loc=0, column='State', value=state)
+                                z.insert(loc=0, column='Table ID', value=table_id)
+                                z.insert(loc=0, column='Table Category',
+                                        value=table_category)
+                                print(table_category)
+                                print(numberTables)
+                                finalData = pd.concat((finalData, z), axis=0)
+                                numberTables += 1
+                                print(z)
 
 
-print(finalData)
-finalData = finalData.fillna(0)
-finalData = finalData.reset_index(drop=True)
-finalData.index = range(1, len(finalData)+1)
-finalData.to_excel("finalData.xlsx")
+    print(finalData)
+    finalData = finalData.fillna(0)
+    finalData = finalData.reset_index(drop=True)
+    finalData.index = range(1, len(finalData)+1)
+    finalData.to_excel(path1+str(year)+state+".xlsx")
