@@ -21,117 +21,30 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.patches as patches
 import math
-import tabula
+#import tabula
 
 """Declarations"""
 
 tables = []
 index = 0
-states = ["north_carolina",
-          "nevada",
-          "illinois",
-          "new_mexico",
-          "connecticut",
-          "colorado",
-          "oregon",
-          "louisiana",
-          "idaho",
-          "florida",
-          "kansas",
-          "california",
-          "south_dakota",
-          "alabama",
-          'massachusetts',
-          "oklahoma",
-          "north_dakota",
-          "tennessee",
-          "mississippi",
-          "wyoming",
-          "michigan",
-          "maine",
-          "virginia",
-          "arkansas",
-          "kentucky",
-          "indiana",
-          "montana",
-          "west_virginia",
-          "ohio",
-          "rhode_island",
-          "new_york",
-          "utah",
-          "delaware",
-          "georgia",
-          "missouri",
-          "maryland",
-          "arizona",
-          "nebraska",
-          "washington",
-          'texas',
-          "new_hampshire",
-          "minnesota",
-          "south_carolina",
-          "pennsylvania",
-          "new_jersey",
-          "vermont",
-          "wisconsin",
-          "district_of_columbia",
-          "hawaii",
-          "alaska"]
-codes = ["nc_state_of_north_carolina_",
-        "nv_state_of_nevada_",
-        "il_state_of_illinois_",
-        "nm_state_of_new_mexico_",
-        "ct_state_of_connecticut_",
-        "co_state_of_colorado_",
-        "or_state_of_oregon_",
-        "la_state_of_louisiana_",
-        "id_state_of_idaho_",
-        "fl_state_of_florida_",
-        "ar_state_of_arkansas_",
-        "ca_state_of_california_",
-        "sd_state_of_south_dakota_",
-        "al_state_of_alabama_",
-        "ma_state_of_massachusetts_",
-        "ok_state_of_oklahoma_",
-        "nd_state_of_north_dakota_",
-        "tn_state_of_tennessee_",
-        "ms_state_of_mississippi_",
-        "wy_state_of_wyoming_",
-        "mi_state_of_michigan_",
-        "me_state_of_maine_",
-        "wv_state_of_west_virginia_",
-        "ar_state_of_arkansas_",
-        "ky_state_of_kentucky_",
-        "in_state_of_indiana_",
-        "mt_state_of_montana_",
-        "wv_state_of_west_virginia_",
-        "oh_state_of_ohio_",
-        "ri_state_of_rhode_island_",
-        "ny_state_of_new_york_",
-        "ut_state_of_utah_",
-        "de_state_of_delaware_",
-        "ga_state_of_georgia_",
-        "mo_state_of_missouri_"
-        "md_state_of_maryland_",
-        "az_state_of_arizona_",
-        "ne_state_of_nebraska_",
-        "wa_state_of_washington_",
-        "tx_state_of_texas_",
-        "nh_state_of_new_hampshire_",
-        "mn_state_of_minnesota_",
-        "sc_state_of_south_carolina_",
-        "pa_state_of_pennsylvania_",
-        "nj_state_of_new_jersey_",
-        "vt_state_of_vermont_",
-        "wi_state_of_wisconsin_",
-        "dc_state_of_district_of_columbia_",
-        "hi_state_of_hawaii_",
-        "ak_state_of_alaska_"]
+
+
+
+#states = state_df["states"].to_list()
+#codes = state_df["codes"].to_list()
+
 
 year = 2018  # change year here
-state = "alaska"  # change state here
-path = "/home/sahilsingh/Documents/oliver/"+str(year)
-path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
+# state = "alaska"  # change state here
+# path = "/home/sahilsingh/Documents/oliver/"+str(year)
+# path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
+path = "/Users/olivergiesecke/Downloads/"
+path1 = "/Users/olivergiesecke/Dropbox/SahilOliver/CAFR_states_output/"
+
+state_df = pd.read_pickle(f"{path1}/state_identifier_v1.pkl")
+state_df["states"] = state_df["state_name"].apply(lambda x: f"{x.lower().replace(' ','_')}")
+state_df["codes"] = state_df.apply(lambda x: f"{x['state_code'].lower()}_state_of_{x['states']}_",axis=1)
+
 # make a central path
 dataCopy = pd.DataFrame()
 dataBefore = pd.DataFrame()
@@ -751,9 +664,16 @@ print(len(filenames))
 
 
 """Restricting to a particular state"""
-for ll in range(len(states)):
-    state=states[ll]
-    code=codes[ll]
+for idx,row in state_df.iterrows():
+    
+    state = row["states"]
+    code = row["codes"]
+    
+    print(state)
+    print(code)
+    
+    
+    
     for i in range(0, len(filenames)):
         try:
             if state in str(filenames[i]):
@@ -768,6 +688,10 @@ for ll in range(len(states)):
     """Final Algorithm"""
 
     for i in range(len(filenames)):
+        
+        print(i)
+        
+        
         with open(f''+path1+str(year)+'/dataout/'+filenames[i], 'rb') as f:
             data = pickle.load(f)
             table_id = get_table_id(filenames[i])
@@ -782,7 +706,7 @@ for ll in range(len(states)):
             #         doc = filenames1[j]
             #         break
             # print(doc)
-            with open(f''+path1+str(year)+'/doc/'+codes[ll]+str(year)+'_tabledirectory.pkl', 'rb') as f:
+            with open(f'{path1}/{year}/doc/{code}{year}_tabledirectory.pkl', 'rb') as f:
                 data1 = pickle.load(f)
                 idType = data1['id'].to_list()
                 tableType = data1['type'].to_list()
