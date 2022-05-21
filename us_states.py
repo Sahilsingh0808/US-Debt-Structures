@@ -21,13 +21,15 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.patches as patches
 import math
+from regex import Match
 import tabula
 
 """Declarations"""
 
 tables = []
 index = 0
-states = ["north_carolina",
+states = [
+          "north_carolina",
           "nevada",
           "illinois",
           "new_mexico",
@@ -77,56 +79,57 @@ states = ["north_carolina",
           "district_of_columbia",
           "hawaii",
           "alaska"]
-codes = ["nc_state_of_north_carolina_",
-        "nv_state_of_nevada_",
-        "il_state_of_illinois_",
-        "nm_state_of_new_mexico_",
-        "ct_state_of_connecticut_",
-        "co_state_of_colorado_",
-        "or_state_of_oregon_",
-        "la_state_of_louisiana_",
-        "id_state_of_idaho_",
-        "fl_state_of_florida_",
-        "ar_state_of_arkansas_",
-        "ca_state_of_california_",
-        "sd_state_of_south_dakota_",
-        "al_state_of_alabama_",
-        "ma_state_of_massachusetts_",
-        "ok_state_of_oklahoma_",
-        "nd_state_of_north_dakota_",
-        "tn_state_of_tennessee_",
-        "ms_state_of_mississippi_",
-        "wy_state_of_wyoming_",
-        "mi_state_of_michigan_",
-        "me_state_of_maine_",
-        "wv_state_of_west_virginia_",
-        "ar_state_of_arkansas_",
-        "ky_state_of_kentucky_",
-        "in_state_of_indiana_",
-        "mt_state_of_montana_",
-        "wv_state_of_west_virginia_",
-        "oh_state_of_ohio_",
-        "ri_state_of_rhode_island_",
-        "ny_state_of_new_york_",
-        "ut_state_of_utah_",
-        "de_state_of_delaware_",
-        "ga_state_of_georgia_",
-        "mo_state_of_missouri_"
-        "md_state_of_maryland_",
-        "az_state_of_arizona_",
-        "ne_state_of_nebraska_",
-        "wa_state_of_washington_",
-        "tx_state_of_texas_",
-        "nh_state_of_new_hampshire_",
-        "mn_state_of_minnesota_",
-        "sc_state_of_south_carolina_",
-        "pa_state_of_pennsylvania_",
-        "nj_state_of_new_jersey_",
-        "vt_state_of_vermont_",
-        "wi_state_of_wisconsin_",
-        "dc_state_of_district_of_columbia_",
-        "hi_state_of_hawaii_",
-        "ak_state_of_alaska_"]
+codes = [
+         "nc_state_of_north_carolina_",
+         "nv_state_of_nevada_",
+         "il_state_of_illinois_",
+         "nm_state_of_new_mexico_",
+         "ct_state_of_connecticut_",
+         "co_state_of_colorado_",
+         "or_state_of_oregon_",
+         "la_state_of_louisiana_",
+         "id_state_of_idaho_",
+         "fl_state_of_florida_",
+         "ks_state_of_kansas_",
+         "ca_state_of_california_",
+         "sd_state_of_south_dakota_",
+         "al_state_of_alabama_",
+         "ma_state_of_massachusetts_",
+         "ok_state_of_oklahoma_",
+         "nd_state_of_north_dakota_",
+         "tn_state_of_tennessee_",
+         "ms_state_of_mississippi_",
+         "wy_state_of_wyoming_",
+         "mi_state_of_michigan_",
+         "me_state_of_maine_",
+         "va_state_of_virginia_",
+         "ar_state_of_arkansas_",
+         "ky_state_of_kentucky_",
+         "in_state_of_indiana_",
+         "mt_state_of_montana_",
+         "wv_state_of_west_virginia_",
+         "oh_state_of_ohio_",
+         "ri_state_of_rhode_island_",
+         "ny_state_of_new_york_",
+         "ut_state_of_utah_",
+         "de_state_of_delaware_",
+         "ga_state_of_georgia_",
+         "mo_state_of_missouri_"
+         "md_state_of_maryland_",
+         "az_state_of_arizona_",
+         "ne_state_of_nebraska_",
+         "wa_state_of_washington_",
+         "tx_state_of_texas_",
+         "nh_state_of_new_hampshire_",
+         "mn_state_of_minnesota_",
+         "sc_state_of_south_carolina_",
+         "pa_state_of_pennsylvania_",
+         "nj_state_of_new_jersey_",
+         "vt_state_of_vermont_",
+         "wi_state_of_wisconsin_",
+         "dc_state_of_district_of_columbia_",
+         "hi_state_of_hawaii_",
+         "ak_state_of_alaska_"]
 
 year = 2018  # change year here
 state = "alaska"  # change state here
@@ -206,9 +209,12 @@ def get_table_id(tab):
 
 
 def repair_dfindex(tabdata):
-    if tabdata.iloc[-1, 0] == "":
-        tabdata.iloc[-1, 0] = "total"
-    else:
+    try:
+        if tabdata.iloc[-1, 0] == "":
+            tabdata.iloc[-1, 0] = "total"
+        else:
+            pass
+    except:
         pass
 
     for idx, row in tabdata.iterrows():
@@ -456,7 +462,8 @@ def interpolate(data):
     rowC = data.shape[0]
     colC = len(data.columns)
     data_list = data.values.tolist()
-
+    # print(len(data_list[0]))
+    print(len(data_list))
     for i in range(0, len(data_list[0])):
         for j in range(0, len(data_list)):
             # changing null values to 0
@@ -752,8 +759,11 @@ print(len(filenames))
 
 """Restricting to a particular state"""
 for ll in range(len(states)):
-    state=states[ll]
-    code=codes[ll]
+    print(len(states),len(codes))
+    state = states[ll]
+    code = codes[ll]
+    print(state,code)
+    print(state)
     for i in range(0, len(filenames)):
         try:
             if state in str(filenames[i]):
@@ -763,7 +773,7 @@ for ll in range(len(states)):
         except:
             pass
     filenames = list(filter(None, filenames))
-
+    print(len(filenames))
 
     """Final Algorithm"""
 
@@ -781,7 +791,7 @@ for ll in range(len(states)):
             #     if state in filenames1[j]:
             #         doc = filenames1[j]
             #         break
-            # print(doc)
+            # print(doc)vC
             with open(f''+path1+str(year)+'/doc/'+codes[ll]+str(year)+'_tabledirectory.pkl', 'rb') as f:
                 data1 = pickle.load(f)
                 idType = data1['id'].to_list()
@@ -817,7 +827,7 @@ for ll in range(len(states)):
                     filename_templ = filename_templ.lower()
                     with open(f""+path1+str(year)+"/dataout/"+filename_templ, 'rb') as f:
                         dataBefore = pickle.load(f)
-                    print(tableIDBefore)
+                    # print(tableIDBefore)
                     print(tableIDList)
 
                 # repair index
@@ -844,23 +854,27 @@ for ll in range(len(states)):
                     rowC = data.shape[0]
                     colC = len(data.columns)
                     data_list = data.values.tolist()
-
+                    print(data)
+                    startingFound=False
                     # ignoring the starting useless rows of the dataframe
                     for i in range(0, len(data_list)):
                         for j in range(0, len(data_list[i])):
                             cell = str(data_list[i][j])
                             match = re.match(r'.*([1-3][0-9]{3})', cell)
+                            
                             if match is not None:
-                            # if "Year" in cell or "year" in cell:
+                                # print(match.group(1))
+                                # if "Year" in cell or "year" in cell:
                                 data = (data.iloc[i:, ])
+                                startingFound=True
                                 # print(data)
                                 break
-                    try:
-                        data = repair_dfindex(data)
-                        data = data.reset_index(drop=True)
-                    except:
-                        print("error")
-
+                        if startingFound==True:
+                            break
+                    # print(data)
+                    data = repair_dfindex(data)
+                    data = data.reset_index(drop=True)
+                    # print(data)
                     # ignoring the ending useless rows of the dataframe
                     data_list = data.values.tolist()
                     for i in range(0, len(data_list)):
@@ -869,9 +883,9 @@ for ll in range(len(states)):
                             if "Total" in cell or "total" in cell:
                                 data = (data.iloc[:i, ])
                                 break
-
+                    # print(data)
                     data = delete_empty_rows_values(data)
-
+                    # print(data)
                     for i in range(0, len(data.columns)):
                         for j in range(0, data.shape[0]):
                             try:
@@ -882,12 +896,10 @@ for ll in range(len(states)):
                                     data[i][j] = np.nan
                             except:
                                 pass
-
+                    print(data)
                     data = correct_numbers_table(data)
-                    try:    
-                        data = interpolate(data)
-                    except:
-                        print("error")
+                    print(data)
+                    data = interpolate(data)
 
                     # mattype=[]
                     # for i in range(0,data.shape[0]):
@@ -952,7 +964,7 @@ for ll in range(len(states)):
                         data = delete_empty_columns_extra(data, extra)
                     print(len(data.columns))
                     print(principalCount, interestCount,
-                        swapCount, totalCount, otherCount)
+                          swapCount, totalCount, otherCount)
 
                     headings = format_headings(headings)
                     print(headings)
@@ -987,7 +999,7 @@ for ll in range(len(states)):
                             x.insert(loc=0, column='State', value=state)
                             x.insert(loc=0, column='Table ID', value=table_id)
                             x.insert(loc=0, column='Table Category',
-                                    value=table_category)
+                                     value=table_category)
                             finalData = pd.concat((finalData, x), axis=0)
                             print(table_category)
                             print(numberTables)
@@ -1000,7 +1012,7 @@ for ll in range(len(states)):
                             y.insert(loc=0, column='State', value=state)
                             y.insert(loc=0, column='Table ID', value=table_id)
                             y.insert(loc=0, column='Table Category',
-                                    value=table_category)
+                                     value=table_category)
                             print(table_category)
                             print(numberTables)
                             finalData = pd.concat((finalData, y), axis=0)
@@ -1023,11 +1035,13 @@ for ll in range(len(states)):
                             if x.empty == False:
                                 table_category = tableCategory(
                                     data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
-                                x.insert(loc=0, column='Due Year', value=yearsCol)
+                                x.insert(loc=0, column='Due Year',
+                                         value=yearsCol)
                                 x.insert(loc=0, column='State', value=state)
-                                x.insert(loc=0, column='Table ID', value=table_id)
+                                x.insert(loc=0, column='Table ID',
+                                         value=table_id)
                                 x.insert(loc=0, column='Table Category',
-                                        value=table_category)
+                                         value=table_category)
                                 print(table_category)
                                 print(numberTables)
                                 finalData = pd.concat((finalData, x), axis=0)
@@ -1035,11 +1049,13 @@ for ll in range(len(states)):
                             if y.empty == False:
                                 table_category = tableCategory(
                                     data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
-                                y.insert(loc=0, column='Due Year', value=yearsCol)
+                                y.insert(loc=0, column='Due Year',
+                                         value=yearsCol)
                                 y.insert(loc=0, column='State', value=state)
-                                y.insert(loc=0, column='Table ID', value=table_id)
+                                y.insert(loc=0, column='Table ID',
+                                         value=table_id)
                                 y.insert(loc=0, column='Table Category',
-                                        value=table_category)
+                                         value=table_category)
                                 print(table_category)
                                 print(numberTables)
                                 finalData = pd.concat((finalData, y), axis=0)
@@ -1048,17 +1064,18 @@ for ll in range(len(states)):
                             if z.empty == False:
                                 table_category = tableCategory(
                                     data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 2)
-                                z.insert(loc=0, column='Due Year', value=yearsCol)
+                                z.insert(loc=0, column='Due Year',
+                                         value=yearsCol)
                                 z.insert(loc=0, column='State', value=state)
-                                z.insert(loc=0, column='Table ID', value=table_id)
+                                z.insert(loc=0, column='Table ID',
+                                         value=table_id)
                                 z.insert(loc=0, column='Table Category',
-                                        value=table_category)
+                                         value=table_category)
                                 print(table_category)
                                 print(numberTables)
                                 finalData = pd.concat((finalData, z), axis=0)
                                 numberTables += 1
                                 print(z)
-
 
     print(finalData)
     finalData = finalData.fillna(0)
