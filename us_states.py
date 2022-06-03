@@ -29,110 +29,109 @@ import tabula
 tables = []
 index = 0
 states = [
-          "north_carolina",
-          "nevada",
-          "illinois",
-          "new_mexico",
-          "connecticut",
-          "colorado",
-          "oregon",
-          "louisiana",
-          "idaho",
-          "florida",
-          "kansas",
-          "california",
-          "south_dakota",
-          "alabama",
-          'massachusetts',
-          "oklahoma",
-          "north_dakota",
-          "tennessee",
-          "mississippi",
-          "wyoming",
-          "michigan",
-          "maine",
-          "virginia",
-          "arkansas",
-          "kentucky",
-          "indiana",
-          "montana",
-          "west_virginia",
-          "ohio",
-          "rhode_island",
-          "new_york",
-          "utah",
-          "delaware",
-          "georgia",
-          "missouri",
-          "maryland",
-          "arizona",
-          "nebraska",
-          "washington",
-          'texas',
-          "new_hampshire",
-          "minnesota",
-          "south_carolina",
-          "pennsylvania",
-          "new_jersey",
-          "vermont",
-          "wisconsin",
-          "district_of_columbia",
-          "hawaii",
-          "alaska"]
+    "north_carolina",
+    "nevada",
+    "illinois",
+    "new_mexico",
+    "connecticut",
+    "colorado",
+    "oregon",
+    "louisiana",
+    "idaho",
+    "florida",
+    "kansas",
+    "california",
+    "south_dakota",
+    "alabama",
+    'massachusetts',
+    "oklahoma",
+    "north_dakota",
+    "tennessee",
+    "mississippi",
+    "wyoming",
+    "michigan",
+    "maine",
+    "virginia",
+    "arkansas",
+    "kentucky",
+    "indiana",
+    "montana",
+    "west_virginia",
+    "ohio",
+    "rhode_island",
+    "new_york",
+    "utah",
+    "delaware",
+    "georgia",
+    "missouri",
+    "maryland",
+    "arizona",
+    "nebraska",
+    "washington",
+    'texas',
+    "new_hampshire",
+    "minnesota",
+    "south_carolina",
+    "pennsylvania",
+    "new_jersey",
+    "vermont",
+    "wisconsin",
+    "district_of_columbia",
+    "hawaii",
+    "alaska"]
 codes = [
-         "nc_state_of_north_carolina_",
-         "nv_state_of_nevada_",
-         "il_state_of_illinois_",
-         "nm_state_of_new_mexico_",
-         "ct_state_of_connecticut_",
-         "co_state_of_colorado_",
-         "or_state_of_oregon_",
-         "la_state_of_louisiana_",
-         "id_state_of_idaho_",
-         "fl_state_of_florida_",
-         "ks_state_of_kansas_",
-         "ca_state_of_california_",
-         "sd_state_of_south_dakota_",
-         "al_state_of_alabama_",
-         "ma_state_of_massachusetts_",
-         "ok_state_of_oklahoma_",
-         "nd_state_of_north_dakota_",
-         "tn_state_of_tennessee_",
-         "ms_state_of_mississippi_",
-         "wy_state_of_wyoming_",
-         "mi_state_of_michigan_",
-         "me_state_of_maine_",
-         "va_state_of_virginia_",
-         "ar_state_of_arkansas_",
-         "ky_state_of_kentucky_",
-         "in_state_of_indiana_",
-         "mt_state_of_montana_",
-         "wv_state_of_west_virginia_",
-         "oh_state_of_ohio_",
-         "ri_state_of_rhode_island_",
-         "ny_state_of_new_york_",
-         "ut_state_of_utah_",
-         "de_state_of_delaware_",
-         "ga_state_of_georgia_",
-         "mo_state_of_missouri_"
-         "md_state_of_maryland_",
-         "az_state_of_arizona_",
-         "ne_state_of_nebraska_",
-         "wa_state_of_washington_",
-         "tx_state_of_texas_",
-         "nh_state_of_new_hampshire_",
-         "mn_state_of_minnesota_",
-         "sc_state_of_south_carolina_",
-         "pa_state_of_pennsylvania_",
-         "nj_state_of_new_jersey_",
-         "vt_state_of_vermont_",
-         "wi_state_of_wisconsin_",
-         "dc_state_of_district_of_columbia_",
-         "hi_state_of_hawaii_",
-         "ak_state_of_alaska_"]
+    "nc_state_of_north_carolina_",
+    "nv_state_of_nevada_",
+    "il_state_of_illinois_",
+    "nm_state_of_new_mexico_",
+    "ct_state_of_connecticut_",
+    "co_state_of_colorado_",
+    "or_state_of_oregon_",
+    "la_state_of_louisiana_",
+    "id_state_of_idaho_",
+    "fl_state_of_florida_",
+    "ks_state_of_kansas_",
+    "ca_state_of_california_",
+    "sd_state_of_south_dakota_",
+    "al_state_of_alabama_",
+    "ma_state_of_massachusetts_",
+    "ok_state_of_oklahoma_",
+    "nd_state_of_north_dakota_",
+    "tn_state_of_tennessee_",
+    "ms_state_of_mississippi_",
+    "wy_state_of_wyoming_",
+    "mi_state_of_michigan_",
+    "me_state_of_maine_",
+    "va_state_of_virginia_",
+    "ar_state_of_arkansas_",
+    "ky_state_of_kentucky_",
+    "in_state_of_indiana_",
+    "mt_state_of_montana_",
+    "wv_state_of_west_virginia_",
+    "oh_state_of_ohio_",
+    "ri_state_of_rhode_island_",
+    "ny_state_of_new_york_",
+    "ut_state_of_utah_",
+    "de_state_of_delaware_",
+    "ga_state_of_georgia_",
+    "mo_state_of_missouri_",
+    "md_state_of_maryland_",
+    "az_state_of_arizona_",
+    "ne_state_of_nebraska_",
+    "wa_state_of_washington_",
+    "tx_state_of_texas_",
+    "nh_state_of_new_hampshire_",
+    "mn_state_of_minnesota_",
+    "sc_state_of_south_carolina_",
+    "pa_state_of_pennsylvania_",
+    "nj_state_of_new_jersey_",
+    "vt_state_of_vermont_",
+    "wi_state_of_wisconsin_",
+    "dc_state_of_district_of_columbia_",
+    "hi_state_of_hawaii_",
+    "ak_state_of_alaska_"]
 
 year = 2018  # change year here
-state = "alaska"  # change state here
 path = "/home/sahilsingh/Documents/oliver/"+str(year)
 path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
@@ -231,6 +230,21 @@ def repair_dfindex(tabdata):
             tabdata.loc[idx,  tabdata.columns[0]] = newvalue
 
     return tabdata
+
+
+"""Check for multiple tables in one"""
+
+
+def multipleTables(data):
+    principal = 0
+    for col in data.columns:
+        if "principal" in str(col).lower():
+            principal += 1
+
+    if principal > 1:
+        return True
+    else:
+        return False
 
 
 """Get Headings"""
@@ -421,9 +435,15 @@ def delete_empty_rows_values(data):
     data_list = data.values.tolist()
     for i in range(0, len(data_list)):
         if data_list[i] == []:
-            data = data.drop(data.index[i])
+            try:
+                data = data.drop(data.index[i])
+            except:
+                pass
         elif data_list[i] == [np.nan]:
-            data = data.drop(data.index[i])
+            try:
+                data = data.drop(data.index[i])
+            except:
+                pass
         cc = 0
         for j in range(0, len(data_list[i])):
 
@@ -434,7 +454,10 @@ def delete_empty_rows_values(data):
             #     data[i][j]="0"
 
         if cc == (len(data_list[i])-1):
-            data = data.drop(data.index[i])
+            try:
+                data = data.drop(data.index[i])
+            except:
+                pass
     return data
 
 
@@ -446,12 +469,16 @@ def correct_numbers_table(data):
     colC = len(data.columns)
     for i in range(1, colC):
         for j in range(0, rowC):
-            cell = str(data[i][j])
-            newNum = ""
-            for k in cell:
-                if k.isdigit() == True or k == '.':
-                    newNum += k
-            data[i][j] = newNum
+            try:
+                cell = str(data[i][j])
+                newNum = ""
+                for k in cell:
+                    if k.isdigit() == True or k == '.':
+                        newNum += k
+                data[i][j] = newNum
+            except:
+                print(i, j, "ERR")
+                # print(str(data[i][j]))
     return data
 
 
@@ -464,75 +491,109 @@ def interpolate(data):
     data_list = data.values.tolist()
     # print(len(data_list[0]))
     print(len(data_list))
-    for i in range(0, len(data_list[0])):
-        for j in range(0, len(data_list)):
-            # changing null values to 0
-            if data_list[j][i] == '':
-                data_list[j][i] = 0.0
-            # converting string values to numbers
-            try:
-                if i > 0:
-                    data_list[j][i] = float(data_list[j][i])
-            except:
-                print("ERROR "+data_list[j][i])
-    data = pd.DataFrame(data_list)
-    insertL = [[]]
-    for i in range(0, len(data_list)):
-        # print(data_list[i])
-        year = str(data_list[i][0])
-        if(len(year) > 4):
-            years = year.split("-")
-            starting_year = int(years[0])
-            ending_year = int(years[1])
-            diff = int(ending_year-starting_year+1)
-            insert_list = []
+    if data.empty == False:
+        for i in range(0, len(data_list[0])):
+            for j in range(0, len(data_list)):
+                # changing null values to 0
+                if data_list[j][i] == '' or data_list[j][i] == '—':
+                    data_list[j][i] = 0.0
+                # converting string values to numbers
+                try:
+                    if i > 0:
+                        data_list[j][i] = float(data_list[j][i])
+                except:
+                    print("ERROR "+data_list[j][i])
+        data = pd.DataFrame(data_list)
+        insertL = [[]]
+        for i in range(0, len(data_list)):
+            # print(data_list[i])
+            year = str(data_list[i][0])
+            match = re.match(r'.*([1-3][0-9]{3})', year)
+            if match is not None:
+                if(len(year) > 7) and ('there' in year) == False and ('\n$' in year) == False:
+                    if year[:-3] == '\n$':
+                        year = year[0:4]
+                        continue
+                    years = year.split("‐")
+                    if '-' in years[0]:
+                        years = years[0].split('-')
+                    endY = True
+                    starting_year = ""
+                    ending_year = ""
+                    try:
+                        if len(years[1]) == 2:
+                            endY = False
+                            ending_year = int("20"+years[1])
+                    except:
+                        pass
+                    try:
+                        cell1 = str(data_list[i][1])
+                        print(int(cell1[0:4]))
+                        cell1 = cell1.strip()
+                        if int(cell1[0:4]) > 2000 and int(cell1[0:4]) < 2100 and len(cell1)<=5:
+                            year += str(cell1[0:4])
+                            print("YEAR ADD")
+                            print(year)
+                    except:
+                        pass
 
-            for j in range(1, len(data_list[0])):
-                cell = data_list[i][j]
-                # print(cell)
-                insert_list.append(cell/diff)
-            # print(insert_list)
+                    year.strip()
+                    starting_year = int(year[0:4])
+                    print(year)
+                    if endY == True:
+                        ending_year = int(year[len(year)-4:])
 
-            for j in range(0, diff):
-                yr = str(starting_year+j)
-                insert_list.insert(0, yr)
-                # print(insert_list)
-                data.loc[len(data)] = insert_list
-                # insertL.append(insert_list)
-                insert_list.pop(0)
-            # print(insertL)
-            insert_list.clear()
+                    print(starting_year,ending_year)
+                    diff = int(ending_year-starting_year+1)
+                    insert_list = []
 
-    data_list1 = data.values.tolist()
-    for i in range(0, len(data_list1)):
-        # print(data_list[i])
-        year = str(data_list1[i][0])
-        if(len(year) > 4):
-            # print(year)
-            data = data.drop(index=i)
+                    for j in range(1, len(data_list[0])):
+                        cell = data_list[i][j]
+                        print(cell)
+                        # print(cell)
+                        insert_list.append(cell/diff)
+                    # print(insert_list)
 
-    # print(data_list)
+                    for j in range(0, diff):
+                        yr = str(starting_year+j)
+                        insert_list.insert(0, yr)
+                        # print(insert_list)
+                        data.loc[len(data)] = insert_list
+                        # insertL.append(insert_list)
+                        insert_list.pop(0)
+                    # print(insertL)
+                    insert_list.clear()
 
-    # for i in range(0,rowC):
-    #     year=str(data[0][i])
-    #     print(year)
-    #     if(len(year)>4):
-    #         years=year.split("-")
-    #         starting_year=int(years[0])
-    #         ending_year=int(years[1])
-    #         diff=ending_year-starting_year+1
-    #         insert_list=[]
-    #         for j in range(1,colC):
-    #             # if re.match(r'^-?\d+(?:\.\d+)$', data[i][j]) is None:
-    #             #     print ("Not float")
-    #             # else:
-    #             #     insert_list.append(data[i][j]/diff)
-    #             try:
-    #                 print((data[i][j]))
-    #                 insert_list.append(int(data[i][j])/diff)
-    #             except:
-    #                 pass
-    #         print(insert_list)
+        data_list1 = data.values.tolist()
+        for i in range(0, len(data_list1)):
+            # print(data_list[i])
+            year = str(data_list1[i][0])
+            if(len(year) > 4):
+                # print(year)
+                data = data.drop(index=i)
+
+        # print(data_list)
+
+        # for i in range(0,rowC):
+        #     year=str(data[0][i])
+        #     print(year)
+        #     if(len(year)>4):
+        #         years=year.split("-")
+        #         starting_year=int(years[0])
+        #         ending_year=int(years[1])
+        #         diff=ending_year-starting_year+1
+        #         insert_list=[]
+        #         for j in range(1,colC):
+        #             # if re.match(r'^-?\d+(?:\.\d+)$', data[i][j]) is None:
+        #             #     print ("Not float")
+        #             # else:
+        #             #     insert_list.append(data[i][j]/diff)
+        #             try:
+        #                 print((data[i][j]))
+        #                 insert_list.append(int(data[i][j])/diff)
+        #             except:
+        #                 pass
+        #         print(insert_list)
 
     return data
 
@@ -593,16 +654,19 @@ def format_headings(headings):
         headings[i] = headings[i].lower()
         if "principal" in headings[i]:
             headings[i] = "Principal"
+        elif "swap" in headings[i]:
+            headings[i] = "Swap Net Payment"
         elif "interest" in headings[i]:
             headings[i] = "Interest"
         elif "total" in headings[i]:
             headings[i] = "Total"
-        elif "swap net" in headings[i]:
-            headings[i] = "Swap Net Payment"
         elif "operating leases" in headings[i]:
             headings[i] = "Total"
 
-    headings[0] = "Due Year"
+    if(len(headings) == 0):
+        headings.append("Due Year")
+    else:
+        headings[0] = "Due Year"
 
     return headings
 
@@ -749,24 +813,130 @@ def tableCategory(data, newcolsdict, headings, numberTables, tableBefore, dataBe
         category = "Not Available"
     return category
 
+"""Check Multiple Dots Data"""
+
+
+def checkMultipleDots(data):
+    check=False
+    rowC = data.shape[0]
+    colC = len(data.columns)
+    list1=[]
+    list2=[]
+    idx=0
+    for i in range(1, colC):
+        for j in range(0, rowC):
+            try:
+                cell = str(data[i][j])
+                if cell.count('.')==2:
+                    check=True
+                    idx=i
+                    cells=cell.split('.')
+                    f=cells[0]
+                    s=cells[1]
+                    t=cells[2]
+                    res_first = s[0:len(s)//2]
+                    res_second = s[len(s)-len(s)//2-1:]
+                    f+='.'+res_first
+                    t=res_second+'.'+t
+                    list1.append(f)
+                    list2.append(t)
+    
+            except:
+                pass
+    print(list1)
+    print(list2)
+    if len(list1)>0:
+        print(idx)
+        cols=data.columns.values.tolist()
+        cols.append((int(cols[-1]+1)))
+        print(cols)
+        data = data.drop(data.columns[i-1],axis = 1)
+        data.insert(i,'a',list1)
+        data.insert(i+1,'b',list2)
+        data.columns=cols
+    print(data)
+    return data
+
+
+"""Check Multiple Year Data"""
+
+
+def checkYearMultiple(data):
+    check = True
+    data_list = data.values.tolist()
+    for i in range(0, len(data_list)):
+        year = str(data_list[i][0])
+        match = re.match(r'.*([1-3][0-9]{3})', year)
+        if match is not None:
+            if len(year) < 10  or ('\n' in year == False):
+                check = False
+                break
+    print(check)
+    if check == True:
+        data_list = data.values.tolist()
+        years = []
+        amount = []
+        for i in range(0, len(data_list)):
+            year = str(data_list[i][0])
+            match = re.match(r'.*([1-3][0-9]{3})', year)
+            if match is not None:
+                aa = year.split('\n')
+                print(aa)
+                years.append(str(aa[0]).strip())
+                amount.append(str(aa[-1]).strip())
+        print(years)
+        print(amount)
+        for ii in range(len(amount)):
+            am=str(amount[ii])
+            am=am.replace(",","")
+            print(am)
+            amount[ii]=int(float(am))
+        data = data.iloc[: , 2:]
+        data.insert(0, '1', amount)
+        data.insert(0,'0',years)
+        data = delete_empty_rows_values(data)
+        data = correct_numbers_table(data)
+        data = correct_numbers_table(data)
+        print(data)
+    return data
+
+
+"""Extract State Name from Filename"""
+
+
+def extractStateName(filename):
+    arr = filename.split("_")
+    arr = arr[3:-5]
+    state = ""
+    for i in range(len(arr)):
+        if i > 0:
+            state += "_"+arr[i]
+        else:
+            state += arr[i]
+    return state
+
 
 """Filenames"""
 
 filenames = next(walk(
     r''+path1+str(year)+'/dataout/'), (None, None, []))[2]
 print(len(filenames))
-
+filenamesCopy = filenames.copy()
+# for i in range(len(filenames)):
+#     print(filenames[i])
 
 """Restricting to a particular state"""
 for ll in range(len(states)):
-    print(len(states),len(codes))
+    filenames = filenamesCopy.copy()
+    print(len(states), len(codes))
     state = states[ll]
     code = codes[ll]
-    print(state,code)
-    print(state)
+    print(state, code)
     for i in range(0, len(filenames)):
         try:
-            if state in str(filenames[i]):
+            filenameState = extractStateName(filenames[i])
+            # print(filenameState)
+            if state == filenameState:
                 continue
             else:
                 filenames[i] = None
@@ -803,6 +973,7 @@ for ll in range(len(states)):
                         break
             d_mattable = identify_table(data, year, threshold=.2)
             filename_array = filenames[i].split("_")
+            # print(filename_array)
             filename_array[3] = filename_array[3].capitalize()
             filename_temp = filename_array[:-4]
             filename_templ = ""
@@ -815,7 +986,6 @@ for ll in range(len(states)):
                 state = filename_array[3]+" "+filename_array[4]
             if d_mattable:
                 if tableIDList.index(table_id) > 0:
-                    print(state)
                     indexBefore = idType.index(table_id)+1
                     tableIDBefore = idType[indexBefore]
                     tableTypeBefore = res[tableIDBefore]
@@ -828,7 +998,6 @@ for ll in range(len(states)):
                     with open(f""+path1+str(year)+"/dataout/"+filename_templ, 'rb') as f:
                         dataBefore = pickle.load(f)
                     # print(tableIDBefore)
-                    print(tableIDList)
 
                 # repair index
                 data = repair_dfindex(data)
@@ -855,21 +1024,24 @@ for ll in range(len(states)):
                     colC = len(data.columns)
                     data_list = data.values.tolist()
                     print(data)
-                    startingFound=False
+                    startingFound = False
                     # ignoring the starting useless rows of the dataframe
                     for i in range(0, len(data_list)):
                         for j in range(0, len(data_list[i])):
-                            cell = str(data_list[i][j])
+                            cell = str(data_list[i][0])
+                            if cell[:-3] == '\n$':
+                                cell = cell[0:4]
+                                continue
                             match = re.match(r'.*([1-3][0-9]{3})', cell)
-                            
+
                             if match is not None:
                                 # print(match.group(1))
                                 # if "Year" in cell or "year" in cell:
                                 data = (data.iloc[i:, ])
-                                startingFound=True
+                                startingFound = True
                                 # print(data)
                                 break
-                        if startingFound==True:
+                        if startingFound == True:
                             break
                     # print(data)
                     data = repair_dfindex(data)
@@ -880,7 +1052,7 @@ for ll in range(len(states)):
                     for i in range(0, len(data_list)):
                         for j in range(0, len(data_list[i])):
                             cell = str(data_list[i][j])
-                            if "Total" in cell or "total" in cell:
+                            if "Total" in cell or "total" in cell or "Less:" in cell:
                                 data = (data.iloc[:i, ])
                                 break
                     # print(data)
@@ -899,6 +1071,8 @@ for ll in range(len(states)):
                     print(data)
                     data = correct_numbers_table(data)
                     print(data)
+                    data = checkYearMultiple(data)
+                    data= checkMultipleDots(data)
                     data = interpolate(data)
 
                     # mattype=[]
@@ -1000,10 +1174,12 @@ for ll in range(len(states)):
                             x.insert(loc=0, column='Table ID', value=table_id)
                             x.insert(loc=0, column='Table Category',
                                      value=table_category)
-                            finalData = pd.concat((finalData, x), axis=0)
+                            print(x)
+                            if(multipleTables(data) == False):
+                                finalData = pd.concat((finalData, x), axis=0)
                             print(table_category)
                             print(numberTables)
-                            print(x)
+
                             print("FINAL DATA")
                         if y.empty == False:
                             table_category = tableCategory(
@@ -1015,7 +1191,8 @@ for ll in range(len(states)):
                                      value=table_category)
                             print(table_category)
                             print(numberTables)
-                            finalData = pd.concat((finalData, y), axis=0)
+                            if(multipleTables(data) == False):
+                                finalData = pd.concat((finalData, y), axis=0)
                             print(y)
 
                     else:
@@ -1042,10 +1219,14 @@ for ll in range(len(states)):
                                          value=table_id)
                                 x.insert(loc=0, column='Table Category',
                                          value=table_category)
+
                                 print(table_category)
                                 print(numberTables)
-                                finalData = pd.concat((finalData, x), axis=0)
                                 print(x)
+                                if(multipleTables(data) == False):
+                                    finalData = pd.concat(
+                                        (finalData, x), axis=0)
+
                             if y.empty == False:
                                 table_category = tableCategory(
                                     data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
@@ -1058,7 +1239,9 @@ for ll in range(len(states)):
                                          value=table_category)
                                 print(table_category)
                                 print(numberTables)
-                                finalData = pd.concat((finalData, y), axis=0)
+                                if(multipleTables(data) == False):
+                                    finalData = pd.concat(
+                                        (finalData, y), axis=0)
                                 print(y)
 
                             if z.empty == False:
@@ -1073,7 +1256,9 @@ for ll in range(len(states)):
                                          value=table_category)
                                 print(table_category)
                                 print(numberTables)
-                                finalData = pd.concat((finalData, z), axis=0)
+                                if(multipleTables(data) == False):
+                                    finalData = pd.concat(
+                                        (finalData, z), axis=0)
                                 numberTables += 1
                                 print(z)
 
