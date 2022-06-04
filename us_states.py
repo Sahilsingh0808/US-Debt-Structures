@@ -131,7 +131,7 @@ codes = [
     "hi_state_of_hawaii_",
     "ak_state_of_alaska_"]
 
-year = 2018  # change year here
+year = 2019  # change year here
 path = "/home/sahilsingh/Documents/oliver/"+str(year)
 path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
@@ -508,6 +508,7 @@ def interpolate(data):
         for i in range(0, len(data_list)):
             # print(data_list[i])
             year = str(data_list[i][0])
+            year=year.replace(" ","")
             match = re.match(r'.*([1-3][0-9]{3})', year)
             if match is not None:
                 if(len(year) > 7) and ('there' in year) == False and ('\n$' in year) == False:
@@ -530,7 +531,7 @@ def interpolate(data):
                         cell1 = str(data_list[i][1])
                         print(int(cell1[0:4]))
                         cell1 = cell1.strip()
-                        if int(cell1[0:4]) > 2000 and int(cell1[0:4]) < 2100 and len(cell1)<=5:
+                        if int(cell1[0:4]) > 2000 and int(cell1[0:4]) < 2100 :
                             year += str(cell1[0:4])
                             print("YEAR ADD")
                             print(year)
@@ -971,7 +972,10 @@ for ll in range(len(states)):
                         res[key] = value
                         tableType.remove(value)
                         break
-            d_mattable = identify_table(data, year, threshold=.2)
+            if year==2019 and table_id=="id_p124_3" and state=="Arizona":
+                d_mattable=False
+            else:
+                d_mattable = identify_table(data, year, threshold=.2)
             filename_array = filenames[i].split("_")
             # print(filename_array)
             filename_array[3] = filename_array[3].capitalize()
@@ -986,18 +990,21 @@ for ll in range(len(states)):
                 state = filename_array[3]+" "+filename_array[4]
             if d_mattable:
                 if tableIDList.index(table_id) > 0:
-                    indexBefore = idType.index(table_id)+1
-                    tableIDBefore = idType[indexBefore]
-                    tableTypeBefore = res[tableIDBefore]
-                    if tableTypeBefore == 'title':
-                        tableBefore = True
-                    else:
-                        tableBefore = False
-                    filename_templ += tableIDBefore+"_c.pkl"
-                    filename_templ = filename_templ.lower()
-                    with open(f""+path1+str(year)+"/dataout/"+filename_templ, 'rb') as f:
-                        dataBefore = pickle.load(f)
-                    # print(tableIDBefore)
+                    try:
+                        indexBefore = idType.index(table_id)+1
+                        tableIDBefore = idType[indexBefore]
+                        tableTypeBefore = res[tableIDBefore]
+                        if tableTypeBefore == 'title':
+                            tableBefore = True
+                        else:
+                            tableBefore = False
+                        filename_templ += tableIDBefore+"_c.pkl"
+                        filename_templ = filename_templ.lower()
+                        with open(f""+path1+str(year)+"/dataout/"+filename_templ, 'rb') as f:
+                            dataBefore = pickle.load(f)
+                        # print(tableIDBefore)
+                    except:
+                        pass
 
                 # repair index
                 data = repair_dfindex(data)
