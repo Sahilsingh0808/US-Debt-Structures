@@ -668,12 +668,7 @@ for idx,row in state_df.iterrows():
     
     state = row["states"]
     code = row["codes"]
-    
-    print(state)
-    print(code)
-    
-    
-    
+        
     for i in range(0, len(filenames)):
         try:
             if state in str(filenames[i]):
