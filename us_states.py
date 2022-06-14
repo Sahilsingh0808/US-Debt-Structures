@@ -146,6 +146,8 @@ tableType = []
 res = {}
 finalData = pd.DataFrame(columns=['Due Year', 'State', 'Table ID',
                          'Table Category', 'Principal', 'Interest', 'Swap Net Payment', 'Total'])
+finalDataYear = pd.DataFrame(columns=['Due Year', 'State', 'Table ID',
+                         'Table Category', 'Principal', 'Interest', 'Swap Net Payment', 'Total'])
 
 """***Functions***
 
@@ -1273,4 +1275,6 @@ for ll in range(len(states)):
     finalData = finalData.fillna(0)
     finalData = finalData.reset_index(drop=True)
     finalData.index = range(1, len(finalData)+1)
-    finalData.to_excel(path1+str(year)+state+".xlsx")
+    # finalData.to_excel(path1+str(year)+state+".xlsx")
+    finalDataYear = pd.concat((finalData, finalDataYear), axis=0)
+finalDataYear.to_excel(path1+str(year)+".xlsx")
