@@ -131,7 +131,7 @@ codes = [
     "hi_state_of_hawaii_",
     "ak_state_of_alaska_"]
 
-year = 2017  # change year here
+year = 2016  # change year here
 path = "/home/sahilsingh/Documents/oliver/"+str(year)
 path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
@@ -820,16 +820,21 @@ def tableCategory(data, newcolsdict, headings, numberTables, tableBefore, dataBe
 
 
 def checkMultipleDots(data):
+    c=0
+    dataCopy=data.copy()
     check=False
-    rowC = data.shape[0]
-    colC = len(data.columns)
+    rowC = dataCopy.shape[0]
+    colC = len(dataCopy.columns)
     list1=[]
     list2=[]
     idx=0
     for i in range(1, colC):
+        list1=[]
+        list2=[]
         for j in range(0, rowC):
             try:
-                cell = str(data[i][j])
+                cell = str(dataCopy[i][j])
+                print(cell)
                 if cell.count('.')==2:
                     check=True
                     idx=i
@@ -837,27 +842,34 @@ def checkMultipleDots(data):
                     f=cells[0]
                     s=cells[1]
                     t=cells[2]
-                    res_first = s[0:len(s)//2]
-                    res_second = s[len(s)-len(s)//2-1:]
+                    res_first = s[0]
+                    res_second = s[1:]
                     f+='.'+res_first
                     t=res_second+'.'+t
                     list1.append(f)
                     list2.append(t)
-    
+        
             except:
                 pass
-    print(list1)
-    print(list2)
-    if len(list1)>0:
-        print(idx)
-        cols=data.columns.values.tolist()
-        cols.append((int(cols[-1]+1)))
-        print(cols)
-        data = data.drop(data.columns[i-1],axis = 1)
-        data.insert(i,'a',list1)
-        data.insert(i+1,'b',list2)
-        data.columns=cols
-    print(data)
+        print(len(list1))
+        print(len(list2))
+        print(list1)
+        print(list2)
+    
+        if len(list1)>0:
+            c+=1
+            print(idx)
+            cols=data.columns.values.tolist()
+            cols.append((int(cols[-1]+1)))
+            print(cols)
+            if c>1:
+                data = data.drop(data.columns[i+1],axis = 1)
+            else:
+                data = data.drop(data.columns[i],axis = 1)
+            data.insert(i,'a',list1)
+            data.insert(i+1,'b',list2)
+            data.columns=cols
+            print(data)
     return data
 
 
@@ -1061,7 +1073,7 @@ for ll in range(len(states)):
                     for i in range(0, len(data_list)):
                         for j in range(0, len(data_list[i])):
                             cell = str(data_list[i][j])
-                            if "Total" in cell or "total" in cell or "Less:" in cell:
+                            if "Total" in cell or "total" in cell or "Less:" in cell or "eyond" in cell or "after" in cell:
                                 data = (data.iloc[:i, ])
                                 break
                     # print(data)
