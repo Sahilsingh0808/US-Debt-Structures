@@ -131,7 +131,7 @@ codes = [
     "hi_state_of_hawaii_",
     "ak_state_of_alaska_"]
 
-year = 2019  # change year here
+year = 2017  # change year here
 path = "/home/sahilsingh/Documents/oliver/"+str(year)
 path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
@@ -153,7 +153,6 @@ finalDataYear = pd.DataFrame(columns=['Due Year', 'State', 'Table ID',
 
 Identify Type of Table
 """
-
 
 def identify_table(tabdata, yr, threshold):
 
@@ -497,14 +496,15 @@ def interpolate(data):
         for i in range(0, len(data_list[0])):
             for j in range(0, len(data_list)):
                 # changing null values to 0
-                if data_list[j][i] == '' or data_list[j][i] == '—':
+                if data_list[j][i] == '' or data_list[j][i] == '—' or data_list[j][i] == '......'or data_list[j][i] == '-':
                     data_list[j][i] = 0.0
                 # converting string values to numbers
                 try:
                     if i > 0:
+                        data_list[j][i]=str(data_list[j][i].replace(',',''))
                         data_list[j][i] = float(data_list[j][i])
                 except:
-                    print("ERROR "+data_list[j][i])
+                    print("ERROR ",data_list[j][i])
         data = pd.DataFrame(data_list)
         insertL = [[]]
         for i in range(0, len(data_list)):
@@ -552,9 +552,9 @@ def interpolate(data):
 
                     for j in range(1, len(data_list[0])):
                         cell = data_list[i][j]
-                        print(cell)
+                        print(cell,diff)
                         # print(cell)
-                        insert_list.append(cell/diff)
+                        insert_list.append(int(cell)/int(diff))
                     # print(insert_list)
 
                     for j in range(0, diff):
