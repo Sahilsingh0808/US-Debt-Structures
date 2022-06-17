@@ -131,7 +131,7 @@ codes = [
     "hi_state_of_hawaii_",
     "ak_state_of_alaska_"]
 
-year = 2016  # change year here
+year = 2015  # change year here
 path = "/home/sahilsingh/Documents/oliver/"+str(year)
 path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
@@ -513,6 +513,18 @@ def interpolate(data):
             year=year.replace(" ","")
             match = re.match(r'.*([1-3][0-9]{3})', year)
             if match is not None:
+                if(len(year) < 6) and ('there' in year) == False and ('\n$' in year) == False:
+                    try:
+                        cell1 = str(data_list[i][1])
+                        print(int(cell1[0:4]))
+                        cell1 = cell1.strip()
+                        if int(cell1[0:4]) > 2000 and int(cell1[0:4]) < 2100 :
+                            year += str(cell1[0:4])
+                            print("YEAR ADD")
+                            print(year)
+                    except:
+                        pass
+
                 if(len(year) > 7) and ('there' in year) == False and ('\n$' in year) == False:
                     if year[:-3] == '\n$':
                         year = year[0:4]
@@ -529,16 +541,7 @@ def interpolate(data):
                             ending_year = int("20"+years[1])
                     except:
                         pass
-                    try:
-                        cell1 = str(data_list[i][1])
-                        print(int(cell1[0:4]))
-                        cell1 = cell1.strip()
-                        if int(cell1[0:4]) > 2000 and int(cell1[0:4]) < 2100 :
-                            year += str(cell1[0:4])
-                            print("YEAR ADD")
-                            print(year)
-                    except:
-                        pass
+                    
 
                     year.strip()
                     starting_year = int(year[0:4])
