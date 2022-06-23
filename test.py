@@ -2,9 +2,16 @@ from fileinput import filename
 from os import walk
 import pandas as pd
 import pickle
+from collections import Counter
+
 df = pd.read_excel(
-    r'/home/sahilsingh/Documents/Repositories/US-Debt-Structures/output/2018/2018.xlsx')
-df.to_pickle("2018.pkl")
+    r'/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2017.xlsx')
+state=list(df['State'])
+list_set = set(state)
+unique_list = (list(list_set))
+print(len(unique_list))
+
+# df.to_pickle("2018.pkl")
 # data=pd.DataFrame()
 # with open(f"/home/sahilsingh/Documents/Repositories/US-Debt-Structures/2018.pkl", 'rb') as f:
 #     data=pickle.load(f)
@@ -152,8 +159,8 @@ for i in range(len(states)):
             break
 for i in range(len(codes)):
     print(codes[i])
-print(len(states))
-print(len(docs))
+# print(len(states))
+# print(len(docs))
 
 codes = ["nc_state_of_north_carolina_",
          "nv_state_of_nevada_",

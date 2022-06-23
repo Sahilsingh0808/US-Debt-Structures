@@ -28,8 +28,8 @@ import tabula
 
 tables = []
 index = 0
-states = ["alabama"]
-codes = ["al_state_of_alabama_"]
+states = ["maryland"]
+codes = ["md_state_of_maryland_"]
 # states = [
 #     "north_carolina",
 #     "nevada",
@@ -177,6 +177,7 @@ def identify_table(tabdata, yr, threshold):
         freq = count / (len(valuelist) - 1)
 
     d_mattable = freq > threshold
+    print(d_mattable)
     if d_mattable:
         concatStr = ""
         rowC = tabdata.shape[0]
@@ -184,7 +185,7 @@ def identify_table(tabdata, yr, threshold):
         for k in range(0, rowC):
             row = tabdata.iloc[k].to_list()
             for l in range(0, len(row)):
-                concatStr += str(row[l])+" "
+                concatStr += str(row[l]).lower()+" "
         findPrincipal = re.search(r"principal", concatStr, re.IGNORECASE)
         findInterest = re.search(r"interest", concatStr, re.IGNORECASE)
         if findPrincipal or findInterest:
@@ -240,17 +241,21 @@ def repair_dfindex(tabdata):
 
 
 def multipleTables(data):
-    principal = 0
-    # print(data.columns)
-    # print(data)
-    for col in data.columns:
-        if "principal" == str(col).lower():
-            principal += 1
+    try:
+        principal = 0
+        # print(data.columns)
+        # print(data)
+        for col in data.columns:
+            if "principal" == str(col).lower():
+                principal += 1
 
-    if principal > 1:
-        return True
-    else:
-        return False
+        if principal > 1:
+            return True
+        else:
+            return False
+    except:
+        pass
+    return False
 
 
 """Get Headings"""
@@ -659,7 +664,7 @@ def delete_empty_columns_extra(data, extra):
 
 
 def format_headings(headings):
-    
+
     for i in range(0, len(headings)):
         headings[i] = headings[i].replace("_", " ")
         headings[i] = headings[i].replace("/", " ")
@@ -673,7 +678,7 @@ def format_headings(headings):
             headings[i] = "Swap Net Payment"
         elif "interest" in headings[i]:
             headings[i] = "Interest"
-        elif "total" in headings[i]:
+        elif "total" in headings[i] or "amount required" in headings[i]:
             headings[i] = "Total"
         elif "operating leases" in headings[i]:
             headings[i] = "Total"
@@ -681,7 +686,7 @@ def format_headings(headings):
     if(len(headings) == 0):
         headings.append("Due Year")
     else:
-        headings[0]="Due Year"
+        headings[0] = "Due Year"
 
     return headings
 
@@ -955,8 +960,8 @@ filenamesCopy = filenames.copy()
 
 """Restricting to a particular state"""
 for ll in range(len(states)):
-    # finalData = pd.DataFrame(columns=['Due Year', 'State', 'Table ID',
-    #                      'Table Category', 'Principal', 'Interest', 'Swap Net Payment', 'Total'])
+    finalData = pd.DataFrame(columns=['Due Year', 'State', 'Table ID',
+                                      'Table Category', 'Principal', 'Interest', 'Swap Net Payment', 'Total'])
     filenames = filenamesCopy.copy()
     print(len(states), len(codes))
     state = states[ll]
@@ -1001,6 +1006,7 @@ for ll in range(len(states)):
                         res[key] = value
                         tableType.remove(value)
                         break
+            print(table_id)
             if year == 2019 and table_id == "id_p124_3" and state == "Arizona":
                 d_mattable = False
             else:
@@ -1046,9 +1052,9 @@ for ll in range(len(states)):
                 # print(type(headings))
 
                 newcolsdict = get_colheader(data, camelot=True)
-                if len(headings)<2:
-                    headings=list(newcolsdict.values())
-                    headings.insert(0,"Year")
+                if len(headings) < 2:
+                    headings = list(newcolsdict.values())
+                    headings.insert(0, "Year")
 
                 # print(data)
                 print(newcolsdict)
@@ -1185,10 +1191,13 @@ for ll in range(len(states)):
                     # print(len(data.columns))
                     # print(principalCount, interestCount,
                     #       swapCount, totalCount, otherCount)
-                    
+
+                    data = data.loc[:, (data != 0).any(axis=0)]
 
                     if(len(data.columns) == columnCount):
                         data.columns = headings
+
+                    print(data)
 
                     yearsCol = data.iloc[:, 0]
 
@@ -1201,9 +1210,31 @@ for ll in range(len(states)):
 
                     data = data.iloc[:, 1:]
 
+                    if len(principalInd) == 0:
+                        table_category = tableCategory(
+                            data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
+                        if (list(data.columns)).count("Due Year") == 0:
+                            data.insert(loc=0, column='Due Year',
+                                        value=yearsCol)
+                        data.insert(loc=0, column='State', value=state)
+                        data.insert(loc=0, column='Table ID', value=table_id)
+                        data.insert(loc=0, column='Table Category',
+                                    value=table_category)
+                        print(data)
+                        print("MULTIPLE TABLES", multipleTables(data))
+                        print("A!")
+                        print(finalData)
+                        try:
+                            finalData = pd.concat((finalData, data), axis=0)
+                        except:
+                            pass
+
                     if len(principalInd) == 1:
                         x = data.iloc[:, :principalInd[0]-1]
                         y = data.iloc[:, principalInd[0]-1:]
+                        print(x)
+                        print(y)
+                        print("HEY")
                         if(x.empty == False):
                             numberTables += 1
                         if(y.empty == False):
@@ -1212,36 +1243,50 @@ for ll in range(len(states)):
                         if x.empty == False:
                             table_category = tableCategory(
                                 data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
-                            x.insert(loc=0, column='Due Year', value=yearsCol)
+                            if (list(x.columns)).count("Due Year") == 0:
+                                x.insert(loc=0, column='Due Year',
+                                         value=yearsCol)
                             x.insert(loc=0, column='State', value=state)
                             x.insert(loc=0, column='Table ID', value=table_id)
                             x.insert(loc=0, column='Table Category',
                                      value=table_category)
                             print(x)
-                            print("MULTIPLE TABLES", multipleTables(data))
+                            print("MULTIPLE TABLES", multipleTables(x))
+                            print("X1")
                             if(multipleTables(x) == False):
-                                finalData = pd.concat((finalData, x), axis=0)
+                                try:
+                                    finalData = pd.concat(
+                                        (finalData, x), axis=0)
+                                except:
+                                    pass
                             print(table_category)
                             print(numberTables)
 
                             print("FINAL DATA")
                         if y.empty == False:
+                            print(y)
                             table_category = tableCategory(
                                 data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
-                            y.insert(loc=0, column='Due Year', value=yearsCol)
+                            if (list(y.columns)).count("Due Year") == 0:
+                                y.insert(loc=0, column='Due Year',
+                                         value=yearsCol)
                             y.insert(loc=0, column='State', value=state)
                             y.insert(loc=0, column='Table ID', value=table_id)
                             y.insert(loc=0, column='Table Category',
                                      value=table_category)
                             print(table_category)
                             print(numberTables)
-                            print("MULTIPLE TABLES", multipleTables(data))
+                            print("MULTIPLE TABLES", multipleTables(y))
+                            print("Y1")
                             if(multipleTables(y) == False):
-                                finalData = pd.concat((finalData, y), axis=0)
-                            print(y)
+                                try:
+                                    finalData = pd.concat(
+                                        (finalData, y), axis=0)
+                                except:
+                                    pass
 
                     else:
-                        for i in range(0,len(principalInd)-1,2):
+                        for i in range(0, len(principalInd)-1, 1):
                             a = principalInd[i]
                             b = principalInd[i+1]
                             x = data.iloc[:, :a-1]
@@ -1257,64 +1302,78 @@ for ll in range(len(states)):
                             if x.empty == False:
                                 table_category = tableCategory(
                                     data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
-                                x.insert(loc=0, column='Due Year',
-                                            value=yearsCol)
+                                if (list(x.columns)).count("Due Year") == 0:
+                                    x.insert(loc=0, column='Due Year',
+                                             value=yearsCol)
                                 x.insert(loc=0, column='State', value=state)
                                 x.insert(loc=0, column='Table ID',
-                                            value=table_id)
+                                         value=table_id)
                                 x.insert(loc=0, column='Table Category',
-                                            value=table_category)
+                                         value=table_category)
 
                                 print(table_category)
                                 print(numberTables)
                                 print(x)
-                                print("MULTIPLE TABLES", multipleTables(data))
+                                print("MULTIPLE TABLES", multipleTables(x))
+                                print("X")
                                 if(multipleTables(x) == False):
-                                    finalData = pd.concat(
-                                        (finalData, x), axis=0)
+                                    try:
+                                        finalData = pd.concat(
+                                            (finalData, x), axis=0)
+                                    except:
+                                        pass
 
                             if y.empty == False:
                                 table_category = tableCategory(
                                     data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
-                                y.insert(loc=0, column='Due Year',
-                                            value=yearsCol)
+                                print(list(y.columns))
+                                if (list(y.columns)).count("Due Year") == 0:
+                                    y.insert(loc=0, column='Due Year',
+                                             value=yearsCol)
                                 y.insert(loc=0, column='State', value=state)
                                 y.insert(loc=0, column='Table ID',
-                                            value=table_id)
+                                         value=table_id)
                                 y.insert(loc=0, column='Table Category',
-                                            value=table_category)
+                                         value=table_category)
                                 print(table_category)
                                 print(numberTables)
-                                print("MULTIPLE TABLES", multipleTables(data))
+                                print("MULTIPLE TABLES", multipleTables(y))
+                                print("Y")
                                 if(multipleTables(y) == False):
-                                    finalData = pd.concat(
-                                        (finalData, y), axis=0)
+                                    try:
+                                        finalData = pd.concat((finalData, y), axis=0)
+                                    except:
+                                        pass
                                 print(y)
 
                             if z.empty == False:
                                 table_category = tableCategory(
                                     data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 2)
-                                z.insert(loc=0, column='Due Year',
-                                            value=yearsCol)
+                                if (list(z.columns)).count("Due Year") == 0:
+                                    z.insert(loc=0, column='Due Year',
+                                             value=yearsCol)
                                 z.insert(loc=0, column='State', value=state)
                                 z.insert(loc=0, column='Table ID',
-                                            value=table_id)
+                                         value=table_id)
                                 z.insert(loc=0, column='Table Category',
-                                            value=table_category)
+                                         value=table_category)
                                 print(table_category)
                                 print(numberTables)
-                                print("MULTIPLE TABLES", multipleTables(data))
-                                if(multipleTables(z) == False and len(principalInd)>=3) :
-                                    finalData = pd.concat(
-                                        (finalData, z), axis=0)
+                                print("MULTIPLE TABLES", multipleTables(z))
+                                print("Z")
+                                if(multipleTables(z) == False and len(principalInd) >= 2):
+                                    try:
+                                        finalData = pd.concat((finalData, z), axis=0)
+                                    except:
+                                        pass
                                 numberTables += 1
                                 print(z)
-                            
 
     print(finalData)
     finalData = finalData.fillna(0)
     finalData = finalData.reset_index(drop=True)
     finalData.index = range(1, len(finalData)+1)
-    # finalData.to_excel(path1+str(year)+state+".xlsx")
+    finalData.to_excel(path1+str(year)+state+".xlsx")
     finalDataYear = pd.concat((finalData, finalDataYear), axis=0)
 finalDataYear.to_excel(path1+str(year)+".xlsx")
+print(finalDataYear)
