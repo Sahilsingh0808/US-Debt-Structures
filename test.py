@@ -6,11 +6,24 @@ from collections import Counter
 
 df = pd.read_excel(
     r'/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2017.xlsx')
-state=list(df['State'])
-list_set = set(state)
-unique_list = (list(list_set))
-print(len(unique_list))
+# state=list(df['State'])
+# list_set = set(state)
+# unique_list = (list(list_set))
+# print(len(unique_list))
+total=list(df['Total'])
+principal=list(df['Principal'])
+swap=list(df['Swap Net Payment'])
+interest=list(df['Interest'])
+for i in range(len(total)):
+    if total[i] == 0:
+        df.at[(i),"Total"]=principal[i]+interest[i]+swap[i]
 
+print(df)
+df.to_excel("/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/2017_cleaned.xlsx")
+
+
+# df=pd.read_pickle(r'/home/sahilsingh/Downloads/ca_state_of_california_2017_tabledirectory.pkl')
+# print(df)
 # df.to_pickle("2018.pkl")
 # data=pd.DataFrame()
 # with open(f"/home/sahilsingh/Documents/Repositories/US-Debt-Structures/2018.pkl", 'rb') as f:

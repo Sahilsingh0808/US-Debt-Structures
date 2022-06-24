@@ -28,110 +28,110 @@ import tabula
 
 tables = []
 index = 0
-states = ["maryland"]
-codes = ["md_state_of_maryland_"]
-# states = [
-#     "north_carolina",
-#     "nevada",
-#     "illinois",
-#     "new_mexico",
-#     "connecticut",
-#     "colorado",
-#     "oregon",
-#     "louisiana",
-#     "idaho",
-#     "florida",
-#     "kansas",
-#     "california",
-#     "south_dakota",
-#     "alabama",
-#     'massachusetts',
-#     "oklahoma",
-#     "north_dakota",
-#     "tennessee",
-#     "mississippi",
-#     "wyoming",
-#     "michigan",
-#     "maine",
-#     "virginia",
-#     "arkansas",
-#     "kentucky",
-#     "indiana",
-#     "montana",
-#     "west_virginia",
-#     "ohio",
-#     "rhode_island",
-#     "new_york",
-#     "utah",
-#     "delaware",
-#     "georgia",
-#     "missouri",
-#     "maryland",
-#     "arizona",
-#     "nebraska",
-#     "washington",
-#     'texas',
-#     "new_hampshire",
-#     "minnesota",
-#     "south_carolina",
-#     "pennsylvania",
-#     "new_jersey",
-#     "vermont",
-#     "wisconsin",
-#     "district_of_columbia",
-#     "hawaii",
-#     "alaska"]
-# codes = [
-#     "nc_state_of_north_carolina_",
-#     "nv_state_of_nevada_",
-#     "il_state_of_illinois_",
-#     "nm_state_of_new_mexico_",
-#     "ct_state_of_connecticut_",
-#     "co_state_of_colorado_",
-#     "or_state_of_oregon_",
-#     "la_state_of_louisiana_",
-#     "id_state_of_idaho_",
-#     "fl_state_of_florida_",
-#     "ks_state_of_kansas_",
-#     "ca_state_of_california_",
-#     "sd_state_of_south_dakota_",
-#     "al_state_of_alabama_",
-#     "ma_state_of_massachusetts_",
-#     "ok_state_of_oklahoma_",
-#     "nd_state_of_north_dakota_",
-#     "tn_state_of_tennessee_",
-#     "ms_state_of_mississippi_",
-#     "wy_state_of_wyoming_",
-#     "mi_state_of_michigan_",
-#     "me_state_of_maine_",
-#     "va_state_of_virginia_",
-#     "ar_state_of_arkansas_",
-#     "ky_state_of_kentucky_",
-#     "in_state_of_indiana_",
-#     "mt_state_of_montana_",
-#     "wv_state_of_west_virginia_",
-#     "oh_state_of_ohio_",
-#     "ri_state_of_rhode_island_",
-#     "ny_state_of_new_york_",
-#     "ut_state_of_utah_",
-#     "de_state_of_delaware_",
-#     "ga_state_of_georgia_",
-#     "mo_state_of_missouri_",
-#     "md_state_of_maryland_",
-#     "az_state_of_arizona_",
-#     "ne_state_of_nebraska_",
-#     "wa_state_of_washington_",
-#     "tx_state_of_texas_",
-#     "nh_state_of_new_hampshire_",
-#     "mn_state_of_minnesota_",
-#     "sc_state_of_south_carolina_",
-#     "pa_state_of_pennsylvania_",
-#     "nj_state_of_new_jersey_",
-#     "vt_state_of_vermont_",
-#     "wi_state_of_wisconsin_",
-#     "dc_state_of_district_of_columbia_",
-#     "hi_state_of_hawaii_",
-#     "ak_state_of_alaska_"]
+# states = ["california"]
+# codes = ["ca_state_of_california_"]
+states = [
+    "north_carolina",
+    "nevada",
+    "illinois",
+    "new_mexico",
+    "connecticut",
+    "colorado",
+    "oregon",
+    "louisiana",
+    "idaho",
+    "florida",
+    "kansas",
+    "california",
+    "south_dakota",
+    "alabama",
+    'massachusetts',
+    "oklahoma",
+    "north_dakota",
+    "tennessee",
+    "mississippi",
+    "wyoming",
+    "michigan",
+    "maine",
+    "virginia",
+    "arkansas",
+    "kentucky",
+    "indiana",
+    "montana",
+    "west_virginia",
+    "ohio",
+    "rhode_island",
+    "new_york",
+    "utah",
+    "delaware",
+    "georgia",
+    "missouri",
+    "maryland",
+    "arizona",
+    "nebraska",
+    "washington",
+    'texas',
+    "new_hampshire",
+    "minnesota",
+    "south_carolina",
+    "pennsylvania",
+    "new_jersey",
+    "vermont",
+    "wisconsin",
+    "district_of_columbia",
+    "hawaii",
+    "alaska"]
+codes = [
+    "nc_state_of_north_carolina_",
+    "nv_state_of_nevada_",
+    "il_state_of_illinois_",
+    "nm_state_of_new_mexico_",
+    "ct_state_of_connecticut_",
+    "co_state_of_colorado_",
+    "or_state_of_oregon_",
+    "la_state_of_louisiana_",
+    "id_state_of_idaho_",
+    "fl_state_of_florida_",
+    "ks_state_of_kansas_",
+    "ca_state_of_california_",
+    "sd_state_of_south_dakota_",
+    "al_state_of_alabama_",
+    "ma_state_of_massachusetts_",
+    "ok_state_of_oklahoma_",
+    "nd_state_of_north_dakota_",
+    "tn_state_of_tennessee_",
+    "ms_state_of_mississippi_",
+    "wy_state_of_wyoming_",
+    "mi_state_of_michigan_",
+    "me_state_of_maine_",
+    "va_state_of_virginia_",
+    "ar_state_of_arkansas_",
+    "ky_state_of_kentucky_",
+    "in_state_of_indiana_",
+    "mt_state_of_montana_",
+    "wv_state_of_west_virginia_",
+    "oh_state_of_ohio_",
+    "ri_state_of_rhode_island_",
+    "ny_state_of_new_york_",
+    "ut_state_of_utah_",
+    "de_state_of_delaware_",
+    "ga_state_of_georgia_",
+    "mo_state_of_missouri_",
+    "md_state_of_maryland_",
+    "az_state_of_arizona_",
+    "ne_state_of_nebraska_",
+    "wa_state_of_washington_",
+    "tx_state_of_texas_",
+    "nh_state_of_new_hampshire_",
+    "mn_state_of_minnesota_",
+    "sc_state_of_south_carolina_",
+    "pa_state_of_pennsylvania_",
+    "nj_state_of_new_jersey_",
+    "vt_state_of_vermont_",
+    "wi_state_of_wisconsin_",
+    "dc_state_of_district_of_columbia_",
+    "hi_state_of_hawaii_",
+    "ak_state_of_alaska_"]
 
 year = 2017  # change year here
 path = "/home/sahilsingh/Documents/oliver/"+str(year)
@@ -157,7 +157,32 @@ Identify Type of Table
 """
 
 
-def identify_table(tabdata, yr, threshold):
+def identify_table(tabdata, yr,state,table_id, threshold):
+    state=state.lower()
+    if yr==2017 and state=="california" and (table_id=="id_p145_1" or table_id=="id_p149_1" or table_id=="id_p153_1" ):
+        return True
+    if yr==2017 and state=="district_of_columbia" and (table_id=="id_p123_8" or table_id=="id_p123_9" or table_id=="id_p123_7"
+     or table_id=="id_p123_6"  or table_id=="id_p123_5" or table_id=="id_p123_4" or table_id=="id_p124_2"  or table_id=="id_p124_0" or table_id=="id_p124_1"
+     or table_id=="id_p128_1"  or table_id=="id_p129_0" or table_id=="id_p124_1"):
+        return True
+    if yr==2017 and state=="maryland" and (table_id=="id_p90_1" or table_id=="id_p90_0" or table_id=="id_p98_3"or table_id=="id_p99_1" or table_id=="id_p100_1" 
+    or table_id=="id_p102_4" or table_id=="id_p102_3"or table_id=="id_p104_4" or table_id=="id_p106_0" or table_id=="id_p107_2" or table_id=="id_p126_1"):
+        return True
+    if yr==2017 and state=="massachussetts" and (table_id=="id_p113_1" or table_id=="id_p115_0" or table_id=="id_p136_2"):
+        return True
+    if yr==2017 and state=="new_mexico" and (table_id=="id_p122_0" or table_id=="id_p133_3" or table_id=="id_p135_1"
+     or table_id=="id_p139_0"  or table_id=="id_p152_0" or table_id=="id_p153_1" or table_id=="id_p156_5"  or table_id=="id_p156_2" or table_id=="id_p165_1"
+     or table_id=="id_p166_1"  or table_id=="id_p166_0"):
+        return True
+    if yr==2017 and state=="new_york" and (table_id=="id_p88_3" or table_id=="id_p89_5" or table_id=="id_p89_6"
+     or table_id=="id_p90_0"  or table_id=="id_p94_3" or table_id=="id_p94_2" or table_id=="id_p94_4"  or table_id=="id_p95_1" ):
+        return True
+    if yr==2017 and state=="north_dakota" and (table_id=="id_p90_1" or table_id=="id_p90_2" or table_id=="id_p94_2"
+     or table_id=="id_p116_2"  or table_id=="id_p117_1" or table_id=="id_p118_2" or table_id=="id_p136_3"  ):
+        return True
+    if yr==2017 and state=="oklahoma" and (table_id=="id_p94_2"
+     or table_id=="id_p116_2"  or table_id=="id_p117_1" or table_id=="id_p118_2" or table_id=="id_p136_3"  ):
+        return True
 
     indexcol = tabdata.iloc[:, 0]
     valuelist = [it for it in indexcol.to_list() if it != ""]
@@ -177,7 +202,7 @@ def identify_table(tabdata, yr, threshold):
         freq = count / (len(valuelist) - 1)
 
     d_mattable = freq > threshold
-    print(d_mattable)
+    # print(d_mattable)
     if d_mattable:
         concatStr = ""
         rowC = tabdata.shape[0]
@@ -188,7 +213,8 @@ def identify_table(tabdata, yr, threshold):
                 concatStr += str(row[l]).lower()+" "
         findPrincipal = re.search(r"principal", concatStr, re.IGNORECASE)
         findInterest = re.search(r"interest", concatStr, re.IGNORECASE)
-        if findPrincipal or findInterest:
+        findLeases = re.search(r"leases", concatStr, re.IGNORECASE)
+        if findPrincipal or findInterest or findLeases:
             return True
         elif not findPrincipal and not findInterest:
             return False
@@ -341,8 +367,11 @@ def get_colheader(tabdata, camelot):
 
     rowindex = 0
 
-    while check_firstrow(dflist[rowindex][0]) and rowindex < len(dflist):
-        rowindex += 1
+    try:
+        while check_firstrow(dflist[rowindex][0]) and rowindex < len(dflist):
+            rowindex += 1
+    except:
+        pass
 
     if rowindex > 0:
         # print("Multicolumn header")
@@ -523,6 +552,12 @@ def interpolate(data):
             # print(data_list[i])
             year = str(data_list[i][0])
             year = year.replace(" ", "")
+            year = year.replace(".", "")
+            year = year.replace("…", "")
+            year = year.replace("\n", "")
+            data_list[i][0]=year
+            data.at[i,0]=year
+            # print(year)
             match = re.match(r'.*([1-3][0-9]{3})', year)
             if match is not None:
                 if(len(year) < 6) and ('there' in year) == False and ('\n$' in year) == False:
@@ -614,6 +649,7 @@ def interpolate(data):
         #             except:
         #                 pass
         #         print(insert_list)
+    print("INTERPOLATED")
     print(data)
     return data
 
@@ -899,6 +935,8 @@ def checkYearMultiple(data):
     data_list = data.values.tolist()
     for i in range(0, len(data_list)):
         year = str(data_list[i][0])
+        year=year.replace(".","")
+        year = year.replace("…", "")
         match = re.match(r'.*([1-3][0-9]{3})', year)
         if match is not None:
             if len(year) < 10 or ('\n' in year == False):
@@ -922,6 +960,8 @@ def checkYearMultiple(data):
         for ii in range(len(amount)):
             am = str(amount[ii])
             am = am.replace(",", "")
+            am = am.replace(".", "")
+            am = am.replace("…", "")
             # print(am)
             amount[ii] = int(float(am))
         data = data.iloc[:, 2:]
@@ -1010,7 +1050,7 @@ for ll in range(len(states)):
             if year == 2019 and table_id == "id_p124_3" and state == "Arizona":
                 d_mattable = False
             else:
-                d_mattable = identify_table(data, year, threshold=.2)
+                d_mattable = identify_table(data, year, state , table_id, threshold=.2)
             filename_array = filenames[i].split("_")
             # print(filename_array)
             filename_array[3] = filename_array[3].capitalize()
@@ -1089,7 +1129,7 @@ for ll in range(len(states)):
                                 break
                         if startingFound == True:
                             break
-                    print(data)
+                    # print(data)
                     data = repair_dfindex(data)
                     data = data.reset_index(drop=True)
                     # print(data)
@@ -1098,12 +1138,13 @@ for ll in range(len(states)):
                     for i in range(0, len(data_list)):
                         for j in range(0, len(data_list[i])):
                             cell = str(data_list[i][j])
-                            if "Total" in cell or "total" in cell or "Less:" in cell or "eyond" in cell or "after" in cell:
+                            if "Total" in cell or "total" in cell or "Less:" in cell or "eyond" in cell or "after" in cell or cell=="………":
                                 data = (data.iloc[:i, ])
                                 break
                     # print(data)
+                    print("DELETE")
                     data = delete_empty_rows_values(data)
-                    print(data)
+                    # print(data)
                     for i in range(0, len(data.columns)):
                         for j in range(0, data.shape[0]):
                             try:
@@ -1118,8 +1159,11 @@ for ll in range(len(states)):
                     data = correct_numbers_table(data)
                     # print(data)
                     data = checkYearMultiple(data)
+                    # print(data)
                     data = checkMultipleDots(data)
+                    # print(data)
                     data = interpolate(data)
+                    # print(data)
 
                     # mattype=[]
                     # for i in range(0,data.shape[0]):
