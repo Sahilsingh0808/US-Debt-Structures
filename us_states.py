@@ -28,112 +28,112 @@ import tabula
 
 tables = []
 index = 0
-# states = ["california"]
-# codes = ["ca_state_of_california_"]
-states = [
-    "north_carolina",
-    "nevada",
-    "illinois",
-    "new_mexico",
-    "connecticut",
-    "colorado",
-    "oregon",
-    "louisiana",
-    "idaho",
-    "florida",
-    "kansas",
-    "california",
-    "south_dakota",
-    "alabama",
-    'massachusetts',
-    "oklahoma",
-    "north_dakota",
-    "tennessee",
-    "mississippi",
-    "wyoming",
-    "michigan",
-    "maine",
-    "virginia",
-    "arkansas",
-    "kentucky",
-    "indiana",
-    "montana",
-    "west_virginia",
-    "ohio",
-    "rhode_island",
-    "new_york",
-    "utah",
-    "delaware",
-    "georgia",
-    "missouri",
-    "maryland",
-    "arizona",
-    "nebraska",
-    "washington",
-    'texas',
-    "new_hampshire",
-    "minnesota",
-    "south_carolina",
-    "pennsylvania",
-    "new_jersey",
-    "vermont",
-    "wisconsin",
-    "district_of_columbia",
-    "hawaii",
-    "alaska"]
-codes = [
-    "nc_state_of_north_carolina_",
-    "nv_state_of_nevada_",
-    "il_state_of_illinois_",
-    "nm_state_of_new_mexico_",
-    "ct_state_of_connecticut_",
-    "co_state_of_colorado_",
-    "or_state_of_oregon_",
-    "la_state_of_louisiana_",
-    "id_state_of_idaho_",
-    "fl_state_of_florida_",
-    "ks_state_of_kansas_",
-    "ca_state_of_california_",
-    "sd_state_of_south_dakota_",
-    "al_state_of_alabama_",
-    "ma_state_of_massachusetts_",
-    "ok_state_of_oklahoma_",
-    "nd_state_of_north_dakota_",
-    "tn_state_of_tennessee_",
-    "ms_state_of_mississippi_",
-    "wy_state_of_wyoming_",
-    "mi_state_of_michigan_",
-    "me_state_of_maine_",
-    "va_state_of_virginia_",
-    "ar_state_of_arkansas_",
-    "ky_state_of_kentucky_",
-    "in_state_of_indiana_",
-    "mt_state_of_montana_",
-    "wv_state_of_west_virginia_",
-    "oh_state_of_ohio_",
-    "ri_state_of_rhode_island_",
-    "ny_state_of_new_york_",
-    "ut_state_of_utah_",
-    "de_state_of_delaware_",
-    "ga_state_of_georgia_",
-    "mo_state_of_missouri_",
-    "md_state_of_maryland_",
-    "az_state_of_arizona_",
-    "ne_state_of_nebraska_",
-    "wa_state_of_washington_",
-    "tx_state_of_texas_",
-    "nh_state_of_new_hampshire_",
-    "mn_state_of_minnesota_",
-    "sc_state_of_south_carolina_",
-    "pa_state_of_pennsylvania_",
-    "nj_state_of_new_jersey_",
-    "vt_state_of_vermont_",
-    "wi_state_of_wisconsin_",
-    "dc_state_of_district_of_columbia_",
-    "hi_state_of_hawaii_",
-    "ak_state_of_alaska_"]
+states = ["wisconsin"]
+codes = ["wi_state_of_wisconsin_"]
+# states = [
+#     "north_carolina",
+#     "nevada",
+#     "illinois",
+#     "new_mexico",
+#     "connecticut",
+#     "colorado",
+#     "oregon",
+#     "louisiana",
+#     "idaho",
+#     "florida",
+#     "kansas",
+#     "california",
+#     "south_dakota",
+#     "alabama",
+#     'massachusetts',
+#     "oklahoma",
+#     "north_dakota",
+#     "tennessee",
+#     "mississippi",
+#     "wyoming",
+#     "michigan",
+#     "maine",
+#     "virginia",
+#     "arkansas",
+#     "kentucky",
+#     "indiana",
+#     "montana",
+#     "west_virginia",
+#     "ohio",
+#     "rhode_island",
+#     "new_york",
+#     "utah",
+#     "delaware",
+#     "georgia",
+#     "missouri",
+#     "maryland",
+#     "arizona",
+#     "nebraska",
+#     "washington",
+#     'texas',
+#     "new_hampshire",
+#     "minnesota",
+#     "south_carolina",
+#     "pennsylvania",
+#     "new_jersey",
+#     "vermont",
+#     "wisconsin",
+#     "district_of_columbia",
+#     "hawaii",
+#     "alaska"]
+# codes = [
+#     "nc_state_of_north_carolina_",
+#     "nv_state_of_nevada_",
+#     "il_state_of_illinois_",
+#     "nm_state_of_new_mexico_",
+#     "ct_state_of_connecticut_",
+#     "co_state_of_colorado_",
+#     "or_state_of_oregon_",
+#     "la_state_of_louisiana_",
+#     "id_state_of_idaho_",
+#     "fl_state_of_florida_",
+#     "ks_state_of_kansas_",
+#     "ca_state_of_california_",
+#     "sd_state_of_south_dakota_",
+#     "al_state_of_alabama_",
+#     "ma_state_of_massachusetts_",
+#     "ok_state_of_oklahoma_",
+#     "nd_state_of_north_dakota_",
+#     "tn_state_of_tennessee_",
+#     "ms_state_of_mississippi_",
+#     "wy_state_of_wyoming_",
+#     "mi_state_of_michigan_",
+#     "me_state_of_maine_",
+#     "va_state_of_virginia_",
+#     "ar_state_of_arkansas_",
+#     "ky_state_of_kentucky_",
+#     "in_state_of_indiana_",
+#     "mt_state_of_montana_",
+#     "wv_state_of_west_virginia_",
+#     "oh_state_of_ohio_",
+#     "ri_state_of_rhode_island_",
+#     "ny_state_of_new_york_",
+#     "ut_state_of_utah_",
+#     "de_state_of_delaware_",
+#     "ga_state_of_georgia_",
+#     "mo_state_of_missouri_",
+#     "md_state_of_maryland_",
+#     "az_state_of_arizona_",
+#     "ne_state_of_nebraska_",
+#     "wa_state_of_washington_",
+#     "tx_state_of_texas_",
+#     "nh_state_of_new_hampshire_",
+#     "mn_state_of_minnesota_",
+#     "sc_state_of_south_carolina_",
+#     "pa_state_of_pennsylvania_",
+#     "nj_state_of_new_jersey_",
+#     "vt_state_of_vermont_",
+#     "wi_state_of_wisconsin_",
+#     "dc_state_of_district_of_columbia_",
+#     "hi_state_of_hawaii_",
+#     "ak_state_of_alaska_"]
 
-year = 2017  # change year here
+year = 2016  # change year here
 path = "/home/sahilsingh/Documents/oliver/"+str(year)
 path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
@@ -708,6 +708,9 @@ def format_headings(headings):
         headings[i].strip()
 
         headings[i] = headings[i].lower()
+        headings[i]=headings[i].strip()
+        headings[i]=headings[i].replace("_","")
+        headings[i]=headings[i].replace(" ","")
         if "principal" in headings[i]:
             headings[i] = "Principal"
         elif "swap" in headings[i]:
@@ -1046,7 +1049,7 @@ for ll in range(len(states)):
                         res[key] = value
                         tableType.remove(value)
                         break
-            print(table_id)
+            # print(table_id)
             if year == 2019 and table_id == "id_p124_3" and state == "Arizona":
                 d_mattable = False
             else:
@@ -1208,6 +1211,8 @@ for ll in range(len(states)):
                     for i in range(0, len(headings)):
                         head = str(headings[i])
                         head = head.lower()
+                        head=head.strip()
+                        head=head.replace("_","")
                         if head == "" or head == "\n":
                             continue
                         elif "principal" in head:
