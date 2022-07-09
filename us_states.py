@@ -28,114 +28,114 @@ import tabula
 
 tables = []
 index = 0
-states = ["wisconsin"]
-codes = ["wi_state_of_wisconsin_"]
-# states = [
-#     "north_carolina",
-#     "nevada",
-#     "illinois",
-#     "new_mexico",
-#     "connecticut",
-#     "colorado",
-#     "oregon",
-#     "louisiana",
-#     "idaho",
-#     "florida",
-#     "kansas",
-#     "california",
-#     "south_dakota",
-#     "alabama",
-#     'massachusetts',
-#     "oklahoma",
-#     "north_dakota",
-#     "tennessee",
-#     "mississippi",
-#     "wyoming",
-#     "michigan",
-#     "maine",
-#     "virginia",
-#     "arkansas",
-#     "kentucky",
-#     "indiana",
-#     "montana",
-#     "west_virginia",
-#     "ohio",
-#     "rhode_island",
-#     "new_york",
-#     "utah",
-#     "delaware",
-#     "georgia",
-#     "missouri",
-#     "maryland",
-#     "arizona",
-#     "nebraska",
-#     "washington",
-#     'texas',
-#     "new_hampshire",
-#     "minnesota",
-#     "south_carolina",
-#     "pennsylvania",
-#     "new_jersey",
-#     "vermont",
-#     "wisconsin",
-#     "district_of_columbia",
-#     "hawaii",
-#     "alaska"]
-# codes = [
-#     "nc_state_of_north_carolina_",
-#     "nv_state_of_nevada_",
-#     "il_state_of_illinois_",
-#     "nm_state_of_new_mexico_",
-#     "ct_state_of_connecticut_",
-#     "co_state_of_colorado_",
-#     "or_state_of_oregon_",
-#     "la_state_of_louisiana_",
-#     "id_state_of_idaho_",
-#     "fl_state_of_florida_",
-#     "ks_state_of_kansas_",
-#     "ca_state_of_california_",
-#     "sd_state_of_south_dakota_",
-#     "al_state_of_alabama_",
-#     "ma_state_of_massachusetts_",
-#     "ok_state_of_oklahoma_",
-#     "nd_state_of_north_dakota_",
-#     "tn_state_of_tennessee_",
-#     "ms_state_of_mississippi_",
-#     "wy_state_of_wyoming_",
-#     "mi_state_of_michigan_",
-#     "me_state_of_maine_",
-#     "va_state_of_virginia_",
-#     "ar_state_of_arkansas_",
-#     "ky_state_of_kentucky_",
-#     "in_state_of_indiana_",
-#     "mt_state_of_montana_",
-#     "wv_state_of_west_virginia_",
-#     "oh_state_of_ohio_",
-#     "ri_state_of_rhode_island_",
-#     "ny_state_of_new_york_",
-#     "ut_state_of_utah_",
-#     "de_state_of_delaware_",
-#     "ga_state_of_georgia_",
-#     "mo_state_of_missouri_",
-#     "md_state_of_maryland_",
-#     "az_state_of_arizona_",
-#     "ne_state_of_nebraska_",
-#     "wa_state_of_washington_",
-#     "tx_state_of_texas_",
-#     "nh_state_of_new_hampshire_",
-#     "mn_state_of_minnesota_",
-#     "sc_state_of_south_carolina_",
-#     "pa_state_of_pennsylvania_",
-#     "nj_state_of_new_jersey_",
-#     "vt_state_of_vermont_",
-#     "wi_state_of_wisconsin_",
-#     "dc_state_of_district_of_columbia_",
-#     "hi_state_of_hawaii_",
-#     "ak_state_of_alaska_"]
+# states = ["nevada"]
+# codes = ["nv_state_of_nevada_"]
+states = [
+    "north_carolina",
+    "nevada",
+    "illinois",
+    "new_mexico",
+    "connecticut",
+    "colorado",
+    "oregon",
+    "louisiana",
+    "idaho",
+    "florida",
+    "kansas",
+    "california",
+    "south_dakota",
+    "alabama",
+    'massachusetts',
+    "oklahoma",
+    "north_dakota",
+    "tennessee",
+    "mississippi",
+    "wyoming",
+    "michigan",
+    "maine",
+    "virginia",
+    "arkansas",
+    "kentucky",
+    "indiana",
+    "montana",
+    "west_virginia",
+    "ohio",
+    "rhode_island",
+    "new_york",
+    "utah",
+    "delaware",
+    "georgia",
+    "missouri",
+    "maryland",
+    "arizona",
+    "nebraska",
+    "washington",
+    'texas',
+    "new_hampshire",
+    "minnesota",
+    "south_carolina",
+    "pennsylvania",
+    "new_jersey",
+    "vermont",
+    "wisconsin",
+    "district_of_columbia",
+    "hawaii",
+    "alaska"]
+codes = [
+    "nc_state_of_north_carolina_",
+    "nv_state_of_nevada_",
+    "il_state_of_illinois_",
+    "nm_state_of_new_mexico_",
+    "ct_state_of_connecticut_",
+    "co_state_of_colorado_",
+    "or_state_of_oregon_",
+    "la_state_of_louisiana_",
+    "id_state_of_idaho_",
+    "fl_state_of_florida_",
+    "ks_state_of_kansas_",
+    "ca_state_of_california_",
+    "sd_state_of_south_dakota_",
+    "al_state_of_alabama_",
+    "ma_state_of_massachusetts_",
+    "ok_state_of_oklahoma_",
+    "nd_state_of_north_dakota_",
+    "tn_state_of_tennessee_",
+    "ms_state_of_mississippi_",
+    "wy_state_of_wyoming_",
+    "mi_state_of_michigan_",
+    "me_state_of_maine_",
+    "va_state_of_virginia_",
+    "ar_state_of_arkansas_",
+    "ky_state_of_kentucky_",
+    "in_state_of_indiana_",
+    "mt_state_of_montana_",
+    "wv_state_of_west_virginia_",
+    "oh_state_of_ohio_",
+    "ri_state_of_rhode_island_",
+    "ny_state_of_new_york_",
+    "ut_state_of_utah_",
+    "de_state_of_delaware_",
+    "ga_state_of_georgia_",
+    "mo_state_of_missouri_",
+    "md_state_of_maryland_",
+    "az_state_of_arizona_",
+    "ne_state_of_nebraska_",
+    "wa_state_of_washington_",
+    "tx_state_of_texas_",
+    "nh_state_of_new_hampshire_",
+    "mn_state_of_minnesota_",
+    "sc_state_of_south_carolina_",
+    "pa_state_of_pennsylvania_",
+    "nj_state_of_new_jersey_",
+    "vt_state_of_vermont_",
+    "wi_state_of_wisconsin_",
+    "dc_state_of_district_of_columbia_",
+    "hi_state_of_hawaii_",
+    "ak_state_of_alaska_"]
 
 year = 2016  # change year here
-path = "/home/sahilsingh/Documents/oliver/"+str(year)
-path1 = "/home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/"
+path = "/home/sahil/Documents/oliver/"+str(year)
+path1 = "/home/sahil/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
 dataCopy = pd.DataFrame()
 dataBefore = pd.DataFrame()
@@ -721,6 +721,8 @@ def format_headings(headings):
             headings[i] = "Total"
         elif "operating leases" in headings[i]:
             headings[i] = "Total"
+        else:
+            headings[i]="Total"
 
     if(len(headings) == 0):
         headings.append("Due Year")
@@ -991,6 +993,28 @@ def extractStateName(filename):
             state += arr[i]
     return state
 
+"""Get Score of Headings"""
+def getScoreHeadings(headings):
+    score=0
+    for i in range(0, len(headings)):
+        head = str(headings[i])
+        head = head.lower()
+        head=head.strip()
+        head=head.replace("_","")
+        if head == "" or head == "\n":
+            continue
+        elif "principal" in head:
+            score+=1
+        elif "interest" in head:
+            score+=1
+        elif "total" in head:
+            score+=1
+        elif "swap" in head or "net" in head:
+            score+=1
+        else:
+            score+=0
+    return score
+
 
 """Filenames"""
 
@@ -1114,6 +1138,11 @@ for ll in range(len(states)):
                     data_list = data.values.tolist()
                     print(data)
                     startingFound = False
+                    startingIndex=0
+                    dataCopyHeadings=data.copy()
+                    if year==2016 and state=="Colorado" and table_id=="id_p132_3":
+                        data.drop(data.iloc[:, 0:3], inplace=True, axis=1)
+                        data.insert(0, 'Year', ['','','','Year','2017','2018','2019','2020','2021','2022-2026','2027-2031','2032-2036','2037-2041',''])
                     # ignoring the starting useless rows of the dataframe
                     for i in range(0, len(data_list)):
                         for j in range(0, len(data_list[i])):
@@ -1127,11 +1156,27 @@ for ll in range(len(states)):
                                 # print(match.group(1))
                                 # if "Year" in cell or "year" in cell:
                                 data = (data.iloc[i:, ])
+                                startingIndex=i
                                 startingFound = True
                                 # print(data)
                                 break
                         if startingFound == True:
                             break
+                    
+                    #get the two rows above the years start
+                    headingsRaw1=dataCopyHeadings.iloc[i-2].to_list()
+                    headingsRaw2=dataCopyHeadings.iloc[i-1].to_list()
+                    headingsRaw=[]
+                    for i in range(0,len(headingsRaw1)):
+                        headingsRaw.append(str(headingsRaw1[i])+" "+str(headingsRaw2[i]))
+                    print(headingsRaw)
+                    headingsRawClone=format_headings(headingsRaw)
+                    print("2 cell above years")
+                    print(headingsRawClone)
+                    headingsScore1=getScoreHeadings(headings)
+                    headingsScore2=getScoreHeadings(headingsRawClone)
+                    
+
                     # print(data)
                     data = repair_dfindex(data)
                     data = data.reset_index(drop=True)
@@ -1200,13 +1245,22 @@ for ll in range(len(states)):
                     while('' in headings):
                         headings.remove("")
 
-                    headingsRaw = headings.copy()
+                    headingsRawData = headings.copy()
                     print(headings)
 
                     print(headings)
                     headings = format_headings(headings)
                     print(headings)
                     print("FORMATTED HEADINGS")
+
+                    
+
+                    print("SCORE")
+                    print(headingsScore1)
+                    print(headingsScore2)
+
+                    if(headingsScore1<headingsScore2):
+                        headings=headingsRaw.copy()
 
                     for i in range(0, len(headings)):
                         head = str(headings[i])
@@ -1251,32 +1305,93 @@ for ll in range(len(states)):
                     yearsCol = data.iloc[:, 0]
 
                     principalInd = []
+                    totalInd=[]
                     for i in range(0, len(headings)):
                         if "principal" in headings[i].lower():
                             principalInd.append(i)
-
+                        if "total" in headings[i].lower():
+                            totalInd.append(i)
+                    
+                    print("Index")
+                    print(headings)
                     print(principalInd)
+                    print(totalInd)
 
                     data = data.iloc[:, 1:]
 
                     if len(principalInd) == 0:
-                        table_category = tableCategory(
-                            data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
-                        if (list(data.columns)).count("Due Year") == 0:
-                            data.insert(loc=0, column='Due Year',
-                                        value=yearsCol)
-                        data.insert(loc=0, column='State', value=state)
-                        data.insert(loc=0, column='Table ID', value=table_id)
-                        data.insert(loc=0, column='Table Category',
-                                    value=table_category)
-                        print(data)
-                        print("MULTIPLE TABLES", multipleTables(data))
-                        print("A!")
-                        print(finalData)
-                        try:
-                            finalData = pd.concat((finalData, data), axis=0)
-                        except:
-                            pass
+                        if(len(totalInd)==0):
+                            table_category = tableCategory(
+                                data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
+                            if (list(data.columns)).count("Due Year") == 0:
+                                data.insert(loc=0, column='Due Year',
+                                            value=yearsCol)
+                            data.insert(loc=0, column='State', value=state)
+                            data.insert(loc=0, column='Table ID', value=table_id)
+                            data.insert(loc=0, column='Table Category',
+                                        value=table_category)
+                            print(data)
+                            print("MULTIPLE TABLES", multipleTables(data))
+                            print("A!")
+                            print(finalData)
+                            try:
+                                finalData = pd.concat((finalData, data), axis=0)
+                            except:
+                                pass
+
+                        elif len(totalInd)>0:
+                            print(data)
+                            table_categoryList=[]
+                            yearsColList=[]
+                            cols=data.shape[1]
+                            rows=data.shape[0]
+                            dataCopy=pd.DataFrame()
+                            for i in range(cols):
+                                col=data.iloc[:,i]
+                                dataCopy = pd.concat((dataCopy, col), axis=0)
+                            dataCopy.columns=['Total']
+                            dataCopy.reset_index(inplace = True)
+                            dataCopy = dataCopy.iloc[:, 1:]
+                            # print("VALHALA")
+                            # print(dataCopy)
+                            table_category = tableCategory(
+                                data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
+                            yearsCol=yearsCol.to_list()
+                            # print(type(yearsCol))
+                            # print(yearsCol)
+                            # print(len(yearsCol))
+
+                            if("year" in headingsRawData[0].lower()):
+                                headingsRawData.pop(0)
+                            if("year" in headingsRaw[0].lower()):
+                                headingsRaw.pop(0)
+
+                            print(totalInd)
+                            print(headingsRawData)
+                            print(cols)
+                            for i in range(len(headingsRawData)):
+                                for j in range(rows):
+                                    yearsColList.append(list(yearsCol)[j])
+                                    if(len(headingsRawData)==cols):
+                                        table_categoryList.append(headingsRawData[i])
+                                    elif(len(headingsRawClone)==cols):
+                                        table_categoryList.append(headingsRawClone[i])
+                                    else:
+                                        table_categoryList.append(table_category)
+                            print(len(yearsColList))
+                            if (list(dataCopy.columns)).count("Due Year") == 0:
+                                dataCopy.insert(loc=0, column='Due Year',
+                                            value=yearsColList)
+                            dataCopy.insert(loc=0, column='State', value=state)
+                            dataCopy.insert(loc=0, column='Table ID', value=table_id)
+                            dataCopy.insert(loc=0, column='Table Category',
+                                        value=table_categoryList)
+                            data=dataCopy.copy()
+                            print("TOTAL DATA")
+                            print(data)
+                            finalData = pd.concat(
+                                        (finalData, data), axis=0)
+                                
 
                     if len(principalInd) == 1:
                         x = data.iloc[:, :principalInd[0]-1]
