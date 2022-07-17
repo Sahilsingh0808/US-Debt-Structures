@@ -12,6 +12,7 @@ Import Sets
 import pickle
 from os import walk
 from pyexpat.errors import codes
+from turtle import heading
 from matplotlib import table
 import pandas as pd
 import os
@@ -28,8 +29,8 @@ import tabula
 
 tables = []
 index = 0
-# states = ["nevada"]
-# codes = ["nv_state_of_nevada_"]
+# states = ["wisconsin"]
+# codes = ["wi_state_of_wisconsin_"]
 states = [
     "north_carolina",
     "nevada",
@@ -239,6 +240,7 @@ def get_table_id(tab):
 
 
 def repair_dfindex(tabdata):
+    print(tabdata,"TABDATA")
     try:
         if tabdata.iloc[-1, 0] == "":
             tabdata.iloc[-1, 0] = "total"
@@ -700,6 +702,8 @@ def delete_empty_columns_extra(data, extra):
 
 
 def format_headings(headings):
+    
+    check=True
 
     for i in range(0, len(headings)):
         headings[i] = headings[i].replace("_", " ")
@@ -711,25 +715,41 @@ def format_headings(headings):
         headings[i]=headings[i].strip()
         headings[i]=headings[i].replace("_","")
         headings[i]=headings[i].replace(" ","")
-        if "principal" in headings[i]:
-            headings[i] = "Principal"
-        elif "swap" in headings[i]:
-            headings[i] = "Swap Net Payment"
-        elif "interest" in headings[i]:
-            headings[i] = "Interest"
-        elif "total" in headings[i] or "amount required" in headings[i]:
-            headings[i] = "Total"
-        elif "operating leases" in headings[i]:
-            headings[i] = "Total"
-        else:
-            headings[i]="Total"
 
-    if(len(headings) == 0):
+    for i in range(0, len(headings)):
+        if "principal" in headings[i] or "interest" in headings[i] or "total" in headings[i]:
+            check = False
+
+    headingsCopy=[]
+
+    for i in range(0, len(headings)):
+        
+        if "principal" in headings[i]:
+            headingsCopy.append("Principal")
+        elif "swap" in headings[i]:
+            headingsCopy.append("Swap Net Payment")
+        elif "interest" in headings[i]:
+            headingsCopy.append("Interest")
+        elif "total" in headings[i] or "amount required" in headings[i]:
+            headingsCopy.append("Total")
+        elif "operating leases" in headings[i]:
+            headingsCopy.append("Total")
+        # elif '' in headings[i]:
+        #     if check==True:
+        #         headings[i]="Total"
+        #     else:
+        #         headings.remove('')
+        else:
+            if check==True:
+                headingsCopy.append("Total")
+           
+    if(len(headingsCopy) == 0):
         headings.append("Due Year")
     else:
-        headings[0] = "Due Year"
+        headingsCopy.insert(0,"Due Year")
 
-    return headings
+    print(headingsCopy)
+    return headingsCopy
 
 
 """Format Headings"""
@@ -872,6 +892,9 @@ def tableCategory(data, newcolsdict, headings, numberTables, tableBefore, dataBe
                 category = first
     if category == '':
         category = "Not Available"
+    
+    category.replace("_","")
+
     return category
 
 
@@ -994,6 +1017,7 @@ def extractStateName(filename):
     return state
 
 """Get Score of Headings"""
+
 def getScoreHeadings(headings):
     score=0
     for i in range(0, len(headings)):
@@ -1014,6 +1038,41 @@ def getScoreHeadings(headings):
         else:
             score+=0
     return score
+
+"""Check Year Anomaly"""
+def checkYearAnomaly(data):
+    checkYear=False
+    checkTo=False
+    for i in range(0,data.shape[0]):
+        cell=data.iloc[i,1]
+        match = re.match(r'.*([1-3][0-9]{3})', cell)
+        if match is not None:
+            checkYear=True
+        if "to" in cell:
+            cell1=data.iloc[i,0]
+            cell2=data.iloc[i,2]
+            match1 = re.match(r'.*([1-3][0-9]{3})', cell1)
+            match2 = re.match(r'.*([1-3][0-9]{3})', cell2)
+            if(match1 is not None and match2 is not None):
+                checkTo=True
+    if checkTo==True and checkYear==True:
+        year0=data.iloc[:,0]
+        year1=data.iloc[:,1]
+        year2=data.iloc[:,2]
+        print(year0)
+        years=[]
+        for j in range(len(year0)):
+            years.append(year0[j]+year1[j]+year2[j])
+        data.drop(data.iloc[:, 0:3], inplace=True, axis=1)
+        data.insert(0, 'Year', years)
+        cols=data.shape[1]
+        colsName=[]
+        for index in range(0, cols):
+            colsName.append(index)
+        data.columns=colsName
+    return data
+
+        
 
 
 """Filenames"""
@@ -1126,9 +1185,15 @@ for ll in range(len(states)):
                 # print(data)
                 print(newcolsdict)
                 print(table_id)
+                
+                
 
                 # print whole table
                 with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+
+                    print(data)
+                    data=checkYearAnomaly(data)
+                    print(data)
 
                     numberTables = 0
                     # delete a completely empty row
@@ -1140,9 +1205,11 @@ for ll in range(len(states)):
                     startingFound = False
                     startingIndex=0
                     dataCopyHeadings=data.copy()
-                    if year==2016 and state=="Colorado" and table_id=="id_p132_3":
-                        data.drop(data.iloc[:, 0:3], inplace=True, axis=1)
-                        data.insert(0, 'Year', ['','','','Year','2017','2018','2019','2020','2021','2022-2026','2027-2031','2032-2036','2037-2041',''])
+                    # if year==2016 and state=="Colorado" and table_id=="id_p132_3":
+                    #     data.drop(data.iloc[:, 0:3], inplace=True, axis=1)
+                    #     data.insert(0, 'Year', ['','','','Year','2017','2018','2019','2020','2021','2022-2026','2027-2031','2032-2036','2037-2041',''])
+                    # print("CHECK")
+                    # print(data)
                     # ignoring the starting useless rows of the dataframe
                     for i in range(0, len(data_list)):
                         for j in range(0, len(data_list[i])):
@@ -1246,11 +1313,13 @@ for ll in range(len(states)):
                         headings.remove("")
 
                     headingsRawData = headings.copy()
-                    print(headings)
 
+                    print(headingsRawClone)
                     print(headings)
                     headings = format_headings(headings)
+                    headingsRawClone = format_headings(headingsRawClone)
                     print(headings)
+                    print(headingsRawClone)
                     print("FORMATTED HEADINGS")
 
                     
@@ -1260,7 +1329,7 @@ for ll in range(len(states)):
                     print(headingsScore2)
 
                     if(headingsScore1<headingsScore2):
-                        headings=headingsRaw.copy()
+                        headings=headingsRawClone.copy()
 
                     for i in range(0, len(headings)):
                         head = str(headings[i])
@@ -1346,6 +1415,7 @@ for ll in range(len(states)):
                             cols=data.shape[1]
                             rows=data.shape[0]
                             dataCopy=pd.DataFrame()
+                            print("COLS",cols)
                             for i in range(cols):
                                 col=data.iloc[:,i]
                                 dataCopy = pd.concat((dataCopy, col), axis=0)
@@ -1369,7 +1439,7 @@ for ll in range(len(states)):
                             print(totalInd)
                             print(headingsRawData)
                             print(cols)
-                            for i in range(len(headingsRawData)):
+                            for i in range(cols):
                                 for j in range(rows):
                                     yearsColList.append(list(yearsCol)[j])
                                     if(len(headingsRawData)==cols):
@@ -1379,6 +1449,7 @@ for ll in range(len(states)):
                                     else:
                                         table_categoryList.append(table_category)
                             print(len(yearsColList))
+                            # print(dataCopy)
                             if (list(dataCopy.columns)).count("Due Year") == 0:
                                 dataCopy.insert(loc=0, column='Due Year',
                                             value=yearsColList)
@@ -1539,5 +1610,16 @@ for ll in range(len(states)):
     finalData.index = range(1, len(finalData)+1)
     finalData.to_excel(path1+str(year)+state+".xlsx")
     finalDataYear = pd.concat((finalData, finalDataYear), axis=0)
+
+total = list(finalDataYear['Total'])
+principal = list(finalDataYear['Principal'])
+swap = list(finalDataYear['Swap Net Payment'])
+interest = list(finalDataYear['Interest'])
+for i in range(len(total)):
+    if total[i] == 0:
+        finalDataYear.at[(i+1), "Total"] = principal[i]+interest[i]+swap[i]
+
+finalDataYear.reset_index(inplace=True)
 finalDataYear.to_excel(path1+str(year)+".xlsx")
+
 print(finalDataYear)
