@@ -15,9 +15,9 @@ def equalsAprox(a,b):
     if(a+threshold)>=b and (a-threshold)<=b:
         return True
     return  False
-
+year=2002
 df = pd.read_excel(
-    r'/home/sahil/Dropbox/MigrationData/CAFR_states_output/2012.xlsx')
+    r'/home/sahil/Dropbox/MigrationData/CAFR_states_output/'+str(year)+'.xlsx')
 df.fillna(0)
 df.replace(np.nan,0, regex=True)
 total = list(df['Total'])
@@ -186,4 +186,4 @@ df=df.iloc[:,1:9]
 print(df)
             
 df.to_excel(
-    "/home/sahil/Dropbox/MigrationData/CAFR_states_output/2012_cleaned.xlsx")
+    "/home/sahil/Dropbox/MigrationData/CAFR_states_output/"+str(year)+"_cleaned.xlsx")

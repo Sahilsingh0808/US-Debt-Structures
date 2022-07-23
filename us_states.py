@@ -81,7 +81,10 @@ states = [
     "wisconsin",
     "district_of_columbia",
     "hawaii",
-    "alaska"]
+    "alaska",
+    "colorado",
+    "guam",
+    "iowa"]
 codes = [
     "nc_state_of_north_carolina_",
     "nv_state_of_nevada_",
@@ -132,9 +135,12 @@ codes = [
     "wi_state_of_wisconsin_",
     "dc_state_of_district_of_columbia_",
     "hi_state_of_hawaii_",
-    "ak_state_of_alaska_"]
+    "ak_state_of_alaska_",
+    "co_state_of_colorado_",
+    "gu_guam_",
+    "ia_state_of_iowa_"]
 
-year = 2012  # change year here
+year = 2002  # change year here
 path = "/home/sahil/Documents/oliver/"+str(year)
 path1 = "/home/sahil/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
@@ -539,9 +545,10 @@ def interpolate(data):
         for i in range(0, len(data_list[0])):
             for j in range(0, len(data_list)):
                 # changing null values to 0
-                if data_list[j][i] == '' or data_list[j][i] == '—' or data_list[j][i] == '......' or data_list[j][i] == '-' or data_list[j][i]=='--':
+                if data_list[j][i] == '' or data_list[j][i] == '—' or data_list[j][i] == '......' or data_list[j][i] == '-' or data_list[j][i]=='--' or '................' in data_list[j][i]:
                     data_list[j][i] = 0.0
-               
+                if data_list[j][i]=='...............':
+                    data_list[j][i] = 0.0
                 # converting string values to numbers
                 
                 try:
@@ -564,6 +571,10 @@ def interpolate(data):
                 year=str(firstYear)+"-"+str(lastYear)
             if year=='202~2029':
                 year='2020-2029'
+            if year=='036-2040':
+                year='2036-2040'
+            if year=='2030\n2026-':
+                year='2026-2030'
             year = year.replace(" ", "")
             year = year.replace(".", "")
             year = year.replace("…", "")
@@ -928,7 +939,7 @@ def checkMultipleDots(data):
             try:
                 cell = str(dataCopy[i][j])
                 # print(cell)
-                if cell.count('.') == 2:
+                if cell.count('.') == 2 and cell.count('%')==0:
                     check = True
                     idx = i
                     cells = cell.split('.')
@@ -948,21 +959,23 @@ def checkMultipleDots(data):
         # print(len(list2))
         # print(list1)
         # print(list2)
-
-        if len(list1) > 0:
-            c += 1
-            # print(idx)
-            cols = data.columns.values.tolist()
-            cols.append((int(cols[-1]+1)))
-            # print(cols)
-            if c > 1:
-                data = data.drop(data.columns[i+1], axis=1)
-            else:
-                data = data.drop(data.columns[i], axis=1)
-            data.insert(i, 'a', list1)
-            data.insert(i+1, 'b', list2)
-            data.columns = cols
-            # print(data)
+        try:
+            if len(list1) > 0:
+                c += 1
+                # print(idx)
+                cols = data.columns.values.tolist()
+                cols.append((int(cols[-1]+1)))
+                # print(cols)
+                if c > 1:
+                    data = data.drop(data.columns[i+1], axis=1)
+                else:
+                    data = data.drop(data.columns[i], axis=1)
+                data.insert(i, 'a', list1)
+                data.insert(i+1, 'b', list2)
+                data.columns = cols
+                # print(data)
+        except:
+            pass
     return data
 
 
@@ -1135,16 +1148,19 @@ for ll in range(len(states)):
             #         doc = filenames1[j]
             #         break
             # print(doc)vC
-            with open(f''+path1+str(year)+'/doc/'+codes[ll]+str(year)+'_tabledirectory.pkl', 'rb') as f:
-                data1 = pickle.load(f)
-                idType = data1['id'].to_list()
-                tableType = data1['type'].to_list()
-                for key in idType:
-                    for value in tableType:
-                        res[key] = value
-                        tableType.remove(value)
-                        break
-            # print(table_id)
+            try:
+                with open(f''+path1+str(year)+'/doc/'+codes[ll]+str(year)+'_tabledirectory.pkl', 'rb') as f:
+                    data1 = pickle.load(f)
+                    idType = data1['id'].to_list()
+                    tableType = data1['type'].to_list()
+                    for key in idType:
+                        for value in tableType:
+                            res[key] = value
+                            tableType.remove(value)
+                            break
+                # print(table_id)
+            except:
+                pass
 
             if year==2012 and table_id=="id_p80_2" and state=="Delaware":
                 data.drop(data.columns[1],axis=1,inplace=True)
@@ -1271,6 +1287,7 @@ for ll in range(len(states)):
                     for i in range(0, len(data_list)):
                         for j in range(0, len(data_list[i])):
                             cell = str(data_list[i][j])
+                            cell=cell.lower()
                             match = re.match(r'.*([1-3][0-9]{3})', cell)
                             if match is not None:
                                 findYear=True
