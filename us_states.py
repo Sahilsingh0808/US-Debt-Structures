@@ -29,8 +29,8 @@ import tabula
 
 tables = []
 index = 0
-# states = ["wisconsin"]
-# codes = ["wi_state_of_wisconsin_"]
+# states = ["new_york"]
+# codes = ["ny_state_of_new_york_"]
 states = [
     "north_carolina",
     "nevada",
@@ -140,7 +140,7 @@ codes = [
     "gu_guam_",
     "ia_state_of_iowa_"]
 
-year = 2002  # change year here
+year = 2004  # change year here
 path = "/home/sahil/Documents/oliver/"+str(year)
 path1 = "/home/sahil/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
@@ -213,6 +213,8 @@ def identify_table(tabdata, yr,state,table_id, threshold):
     if d_mattable:
         concatStr = ""
         rowC = tabdata.shape[0]
+        if rowC>5:
+            rowC=5
         colC = len(tabdata.columns)
         for k in range(0, rowC):
             row = tabdata.iloc[k].to_list()
@@ -221,11 +223,47 @@ def identify_table(tabdata, yr,state,table_id, threshold):
         findPrincipal = re.search(r"principal", concatStr, re.IGNORECASE)
         findInterest = re.search(r"interest", concatStr, re.IGNORECASE)
         findLeases = re.search(r"leases", concatStr, re.IGNORECASE)
-        if findPrincipal or findInterest or findLeases:
-            return True
-        elif not findPrincipal and not findInterest:
-            return False
+        # if findPrincipal or findInterest or findLeases:
+        return True
+        # elif not findPrincipal and not findInterest:
+        #     return False
     else:
+        concatStr = ""
+        rowC = tabdata.shape[0]
+        colC = len(tabdata.columns)
+        for k in range(0, rowC):
+            row = tabdata.iloc[k].to_list()
+            for l in range(0, len(row)):
+                concatStr += str(row[l]).lower()+" "
+        findPrincipal = re.search(r"principal", concatStr, re.IGNORECASE)
+        findInterest = re.search(r"interest", concatStr, re.IGNORECASE)
+        findLeases = re.search(r"leases", concatStr, re.IGNORECASE)
+        findYear=re.search(r"fiscal year",concatStr, re.IGNORECASE)
+        findYears=re.search(r"fiscal years",concatStr, re.IGNORECASE)
+        # print("CHECK")
+        # print(type(findYears))
+        # print(findYear)
+        # print("CHECK1")
+        checkFirstColumn=False
+        count=0
+        data_list = data.values.tolist()
+        for i in range(0, len(data_list)):
+            # print(data_list[i])
+            year = str(data_list[i][0])
+            
+            match = re.match(r'.*([1-3][0-9]{3})', year)
+            if match is not None:
+                count+=1
+        print(count)
+        print(len(data_list))
+        if count>0.5*len(data_list):
+            checkFirstColumn=True
+        if state=="new_york" or state=="pennsylvania" or state=="california":
+            if (findYear!=None and (findPrincipal!=None ) and findYears==None and checkFirstColumn==True):
+                return True
+        else:
+            if (findYear!=None and (findPrincipal!=None or findInterest!=None) and findYears==None and checkFirstColumn==True):
+                return True
         return False
 
 
@@ -545,7 +583,7 @@ def interpolate(data):
         for i in range(0, len(data_list[0])):
             for j in range(0, len(data_list)):
                 # changing null values to 0
-                if data_list[j][i] == '' or data_list[j][i] == '—' or data_list[j][i] == '......' or data_list[j][i] == '-' or data_list[j][i]=='--' or '................' in data_list[j][i]:
+                if data_list[j][i] == '' or data_list[j][i] == '—' or data_list[j][i] == '.' or data_list[j][i] == '......' or data_list[j][i] == '-' or data_list[j][i]=='--' or '................' in data_list[j][i]:
                     data_list[j][i] = 0.0
                 if data_list[j][i]=='...............':
                     data_list[j][i] = 0.0
@@ -584,64 +622,67 @@ def interpolate(data):
             # print(year)
             match = re.match(r'.*([1-3][0-9]{3})', year)
             if match is not None:
-                if(len(year) < 6) and ('there' in year) == False and ('\n$' in year) == False:
+                if((len(year) < 6) and ('there' in year) == False and ('\n$' in year) == False) or (year[len(year)-4:]):
                     try:
                         cell1 = str(data_list[i][1])
                         print(int(cell1[0:4]))
                         cell1 = cell1.strip()
                         if int(cell1[0:4]) > 2000 and int(cell1[0:4]) < 2100:
                             year += str(cell1[0:4])
-                            # print("YEAR ADD")
+                            print("YEAR ADD")
                             # print(year)
                     except:
                         pass
-
-                if(len(year) > 7) and ('there' in year) == False and ('\n$' in year) == False:
-                    if year[:-3] == '\n$':
-                        year = year[0:4]
-                        continue
-                    years = year.split("‐")
-                    if '-' in years[0]:
-                        years = years[0].split('-')
-                    endY = True
-                    starting_year = ""
-                    ending_year = ""
-                    try:
-                        if len(years[1]) == 2:
-                            endY = False
-                            ending_year = int("20"+years[1])
-                    except:
-                        pass
-
-                    year.strip()
-                    starting_year = int(year[0:4])
-                    # print(year)
-                    if endY == True:
-                        ending_year = int(year[len(year)-4:])
-
-                    print(starting_year, ending_year)
-                    diff = int(ending_year-starting_year+1)
-                    insert_list = []
-
-                    for j in range(1, len(data_list[0])):
-                        cell = data_list[i][j]
-                        # print(cell, diff)
-                        # print(cell)
+                try:
+                    if(len(year) > 7) and ('there' in year) == False and ('\n$' in year) == False:
+                        if year[:-3] == '\n$':
+                            year = year[0:4]
+                            continue
+                        years = year.split("‐")
+                        if '-' in years[0]:
+                            years = years[0].split('-')
+                        endY = True
+                        starting_year = ""
+                        ending_year = ""
                         try:
-                            insert_list.append(int(cell)/int(diff))
+                            if len(years[1]) == 2:
+                                endY = False
+                                ending_year = int("20"+years[1])
                         except:
                             pass
-                    # print(insert_list)
 
-                    for j in range(0, diff):
-                        yr = str(starting_year+j)
-                        insert_list.insert(0, yr)
+                        year.strip()
+                        starting_year = int(year[0:4])
+                        
+                        # print(year)
+                        if endY == True:
+                            ending_year = int(year[len(year)-4:])
+
+                        print(starting_year, ending_year)
+                        diff = int(ending_year-starting_year+1)
+                        insert_list = []
+
+                        for j in range(1, len(data_list[0])):
+                            cell = data_list[i][j]
+                            # print(cell, diff)
+                            # print(cell)
+                            try:
+                                insert_list.append(int(cell)/int(diff))
+                            except:
+                                pass
                         # print(insert_list)
-                        data.loc[len(data)] = insert_list
-                        # insertL.append(insert_list)
-                        insert_list.pop(0)
-                    # print(insertL)
-                    insert_list.clear()
+
+                        for j in range(0, diff):
+                            yr = str(starting_year+j)
+                            insert_list.insert(0, yr)
+                            # print(insert_list)
+                            data.loc[len(data)] = insert_list
+                            # insertL.append(insert_list)
+                            insert_list.pop(0)
+                        # print(insertL)
+                        insert_list.clear()
+                except:
+                    pass
 
         data_list1 = data.values.tolist()
         for i in range(0, len(data_list1)):
@@ -986,6 +1027,8 @@ def checkYearMultiple(data):
     check = True
     data_list = data.values.tolist()
     for i in range(0, len(data_list)):
+        data_list[i][0].replace('............................................','')
+        data_list[i][0].replace('.......................................','')
         year = str(data_list[i][0])
         year=year.replace(".","")
         year=year.replace(".","")
@@ -995,6 +1038,8 @@ def checkYearMultiple(data):
             if len(year) < 10 or ('\n' in year == False):
                 check = False
                 break
+        # else:
+        #     check=False
     print(check,"CHECK")
     if check == True:
         data_list = data.values.tolist()
@@ -1068,33 +1113,36 @@ def getScoreHeadings(headings):
 def checkYearAnomaly(data):
     checkYear=False
     checkTo=False
-    for i in range(0,data.shape[0]):
-        cell=data.iloc[i,1]
-        match = re.match(r'.*([1-3][0-9]{3})', cell)
-        if match is not None:
-            checkYear=True
-        if "to" in cell:
-            cell1=data.iloc[i,0]
-            cell2=data.iloc[i,2]
-            match1 = re.match(r'.*([1-3][0-9]{3})', cell1)
-            match2 = re.match(r'.*([1-3][0-9]{3})', cell2)
-            if(match1 is not None and match2 is not None):
-                checkTo=True
-    if checkTo==True and checkYear==True:
-        year0=data.iloc[:,0]
-        year1=data.iloc[:,1]
-        year2=data.iloc[:,2]
-        print(year0)
-        years=[]
-        for j in range(len(year0)):
-            years.append(year0[j]+year1[j]+year2[j])
-        data.drop(data.iloc[:, 0:3], inplace=True, axis=1)
-        data.insert(0, 'Year', years)
-        cols=data.shape[1]
-        colsName=[]
-        for index in range(0, cols):
-            colsName.append(index)
-        data.columns=colsName
+    try:
+        for i in range(0,data.shape[0]):
+            cell=data.iloc[i,1]
+            match = re.match(r'.*([1-3][0-9]{3})', cell)
+            if match is not None:
+                checkYear=True
+            if "to" in cell:
+                cell1=data.iloc[i,0]
+                cell2=data.iloc[i,2]
+                match1 = re.match(r'.*([1-3][0-9]{3})', cell1)
+                match2 = re.match(r'.*([1-3][0-9]{3})', cell2)
+                if(match1 is not None and match2 is not None):
+                    checkTo=True
+        if checkTo==True and checkYear==True:
+            year0=data.iloc[:,0]
+            year1=data.iloc[:,1]
+            year2=data.iloc[:,2]
+            print(year0)
+            years=[]
+            for j in range(len(year0)):
+                years.append(year0[j]+year1[j]+year2[j])
+            data.drop(data.iloc[:, 0:3], inplace=True, axis=1)
+            data.insert(0, 'Year', years)
+            cols=data.shape[1]
+            colsName=[]
+            for index in range(0, cols):
+                colsName.append(index)
+            data.columns=colsName
+    except:
+        pass
     return data
 
         
@@ -1236,12 +1284,19 @@ for ll in range(len(states)):
                     print(data)
                     startingFound = False
                     startingIndex=0
+                    endingIndex=0
+                    endingFound=False
                     dataCopyHeadings=data.copy()
                     # if year==2016 and state=="Colorado" and table_id=="id_p132_3":
                     #     data.drop(data.iloc[:, 0:3], inplace=True, axis=1)
                     #     data.insert(0, 'Year', ['','','','Year','2017','2018','2019','2020','2021','2022-2026','2027-2031','2032-2036','2037-2041',''])
                     # print("CHECK")
                     # print(data)
+                   
+                    for i in range(0, len(data_list)):
+                        cell = str(data_list[i][0])
+                        cell=cell.replace('.','')
+                        data.at[i,0]=cell
 
                     findYear=False;
                     # ignoring the starting useless rows of the dataframe
@@ -1265,18 +1320,21 @@ for ll in range(len(states)):
                             break
                     
                     #get the two rows above the years start
-                    headingsRaw1=dataCopyHeadings.iloc[i-2].to_list()
-                    headingsRaw2=dataCopyHeadings.iloc[i-1].to_list()
-                    headingsRaw=[]
-                    for i in range(0,len(headingsRaw1)):
-                        headingsRaw.append(str(headingsRaw1[i])+" "+str(headingsRaw2[i]))
-                    print(headingsRaw)
-                    headingsRawClone=format_headings(headingsRaw)
-                    print("2 cell above years")
-                    print(headingsRawClone)
-                    headingsScore1=getScoreHeadings(headings)
-                    headingsScore2=getScoreHeadings(headingsRawClone)
-                    
+                    try:
+                        headingsRaw1=dataCopyHeadings.iloc[i-2].to_list()
+                        headingsRaw2=dataCopyHeadings.iloc[i-1].to_list()
+                        headingsRaw=[]
+                        for i in range(0,len(headingsRaw1)):
+                            headingsRaw.append(str(headingsRaw1[i])+" "+str(headingsRaw2[i]))
+                        print(headingsRaw)
+                        headingsRawClone=format_headings(headingsRaw)
+                        print("2 cell above years")
+                        print(headingsRawClone)
+                        headingsScore1=getScoreHeadings(headings)
+                        headingsScore2=getScoreHeadings(headingsRawClone)
+                    except:
+                        pass
+                        
 
                     # print(data)
                     data = repair_dfindex(data)
@@ -1284,49 +1342,102 @@ for ll in range(len(states)):
                     # print(data)
                     # ignoring the ending useless rows of the dataframe
                     data_list = data.values.tolist()
-                    for i in range(0, len(data_list)):
+
+                    for i in range(len(data_list)-1,0,-1):
                         for j in range(0, len(data_list[i])):
-                            cell = str(data_list[i][j])
-                            cell=cell.lower()
+                            cell = str(data_list[i][0])
+                            if cell[:-3] == '\n$':
+                                cell = cell[0:4]
+                                continue
                             match = re.match(r'.*([1-3][0-9]{3})', cell)
+
                             if match is not None:
-                                findYear=True
-                            if findYear==True and cell=='':
+                                # print(match.group(1))
+                                # if "Year" in cell or "year" in cell:
                                 data = (data.iloc[:i, ])
+                                endingIndex=i
+                                endingFound = True
+                                # print(data)
                                 break
-                            if "Total" in cell or "total" in cell or "Less:" in cell or "eyond" in cell or "after" in cell or cell=="………":
-                                data = (data.iloc[:i, ])
-                                break
-                            
+                        if endingFound == True:
+                            break
+
+                    # for i in range(startingIndex, len(data_list)):
+                    #     for j in range(0, len(data_list[i])):
+                    #         cell = str(data_list[i][j])
+                    #         cell=cell.lower()
+                    #         match = re.match(r'.*([1-3][0-9]{3})', cell)
+                    #         if match is not None:
+                    #             findYear=True
+                    #         if findYear==True and cell=='':
+                    #             data = (data.iloc[:i, ])
+                    #             break
+                    #         if "Total" in cell or "total" in cell or "Less:" in cell or "eyond" in cell or "after" in cell or cell=="………":
+                    #             data = (data.iloc[:i, ])
+                    #             break
+                    print("CHECKING")
+                    print(data)
                     # print(data)
                     print("DELETE")
-                    data = delete_empty_rows_values(data)
-                    if year==2013 and table_id=="id_p95_2" and state=="Maryland":
-                        data[0]=["2014","2015","2016","2017","2018","2019-2023","2024-2028","2029-2033","2034-2038","2039-2043","2044-2048","2049-2053","2054-2058"]
+                    # data = delete_empty_rows_values(data)
+                    # if year==2013 and table_id=="id_p95_2" and state=="Maryland":
+                    #     data[0]=["2014","2015","2016","2017","2018","2019-2023","2024-2028","2029-2033","2034-2038","2039-2043","2044-2048","2049-2053","2054-2058"]
 
                     # print(data)
                     for i in range(0, len(data.columns)):
                         for j in range(0, data.shape[0]):
                             try:
                                 cell = (data[i][j])
-                                if(pd.isnull(cell)) or cell == '\n' or cell=='--' or "......................................" in cell:
+                                if(pd.isnull(cell)) or cell == '\n' or cell=='--' or cell =="......................................" or cell==".":
                                     data[i][j] = np.nan
                                 if ord(cell) == 8212 or ord(cell) == 36:
                                     data[i][j] = np.nan
+                                if i>0:
+                                    if "......................................" in cell:
+                                         data[i][j] = np.nan
                             except:
                                 pass
+                   
 
-                    data = delete_empty_rows_values(data)
+                    # data = delete_empty_rows_values(data)
                     # print(data)
-                    data = correct_numbers_table(data)
-                    # print(data)
-                    data = checkYearMultiple(data)
-                    # print(data)
-                    data = checkMultipleDots(data)
+                    try:
+                        data = correct_numbers_table(data)
+                        # print(data)
+
+                        data = checkYearMultiple(data)
+                        # print(data)
+                        data = checkMultipleDots(data)
+                    except:
+                        data=pd.DataFrame()
                     
                     print(data)
 
-                    data = interpolate(data)
+                    # data.reset_index(inplace = True)
+                    deleteRows=[]
+                    data.reset_index(inplace=True)
+                    data = data.iloc[: , 1:]
+                    data_list = data.values.tolist()
+                    for i in range(0, len(data_list)):
+                        cell = str(data_list[i][0])
+                        if('total' in cell.lower() or 'year' in cell.lower() or 'ending' in cell.lower() or 'prison' in cell.lower()):
+                            print("ABCD")
+                            deleteRows.append(i)
+                            # try:
+                            #     data=data.drop(data.index[i],axis=1,inplace=True)
+                            # except:
+                            #     pass
+                    print(deleteRows)
+                    for i in deleteRows:
+                        print(i)
+                        data=data.drop(i)
+                        print(data)
+                    # data=data.drop(deleteRows,axis=1,inplace=True)
+                    print(data)
+                    try:
+                        data = interpolate(data)
+                    except:
+                        data=pd.DataFrame()
                     # print(data)
 
                     # mattype=[]
@@ -1335,8 +1446,12 @@ for ll in range(len(states)):
                     # data["mattype"]=mattype
 
                     # convert entries to float
-                    data = data.astype(float)
-
+                    if len(data)==1:
+                        data=pd.DataFrame()
+                    try:
+                        data = data.astype(float)
+                    except:
+                        data=pd.DataFrame()
                     # format headings name
 
                     # if newcolsdict[0]=="":
@@ -1412,176 +1527,121 @@ for ll in range(len(states)):
                     # print(len(data.columns))
                     # print(principalCount, interestCount,
                     #       swapCount, totalCount, otherCount)
-                    if data.empty==False:
+                    try:
+                        if data.empty==False:
 
-                        data = data.loc[:, (data != 0).any(axis=0)]
+                            data = data.loc[:, (data != 0).any(axis=0)]
 
-                        if(len(data.columns) == columnCount):
-                            data.columns = headings
+                            if(len(data.columns) == columnCount):
+                                data.columns = headings
 
-                        print(data)
+                            print(data)
 
-                        yearsCol = data.iloc[:, 0]
+                            yearsCol = data.iloc[:, 0]
 
-                        principalInd = []
-                        totalInd=[]
-                        for i in range(0, len(headings)):
-                            if "principal" in headings[i].lower():
-                                principalInd.append(i)
-                            if "total" in headings[i].lower():
-                                totalInd.append(i)
-                        
-                        print("Index")
-                        print(headings)
-                        print(principalInd)
-                        print(totalInd)
+                            principalInd = []
+                            totalInd=[]
+                            for i in range(0, len(headings)):
+                                if "principal" in headings[i].lower():
+                                    principalInd.append(i)
+                                if "total" in headings[i].lower():
+                                    totalInd.append(i)
+                            
+                            print("Index")
+                            print(headings)
+                            print(principalInd)
+                            print(totalInd)
 
-                        data = data.iloc[:, 1:]
+                            data = data.iloc[:, 1:]
 
-                        if len(principalInd) == 0:
-                            if(len(totalInd)==0):
-                                table_category = tableCategory(
-                                    data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
-                                if (list(data.columns)).count("Due Year") == 0:
-                                    data.insert(loc=0, column='Due Year',
-                                                value=yearsCol)
-                                data.insert(loc=0, column='State', value=state)
-                                data.insert(loc=0, column='Table ID', value=table_id)
-                                data.insert(loc=0, column='Table Category',
-                                            value=table_category)
-                                print(data)
-                                print("MULTIPLE TABLES", multipleTables(data))
-                                print("A!")
-                                print(finalData)
-                                try:
-                                    finalData = pd.concat((finalData, data), axis=0)
-                                except:
-                                    pass
+                            if len(principalInd) == 0:
+                                if(len(totalInd)==0):
+                                    table_category = tableCategory(
+                                        data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
+                                    if (list(data.columns)).count("Due Year") == 0:
+                                        data.insert(loc=0, column='Due Year',
+                                                    value=yearsCol)
+                                    data.insert(loc=0, column='State', value=state)
+                                    data.insert(loc=0, column='Table ID', value=table_id)
+                                    data.insert(loc=0, column='Table Category',
+                                                value=table_category)
+                                    print(data)
+                                    print("MULTIPLE TABLES", multipleTables(data))
+                                    print("A!")
+                                    print(finalData)
+                                    try:
+                                        finalData = pd.concat((finalData, data), axis=0)
+                                    except:
+                                        pass
 
-                            elif len(totalInd)>0:
-                                print(data)
-                                table_categoryList=[]
-                                yearsColList=[]
-                                cols=data.shape[1]
-                                rows=data.shape[0]
-                                dataCopy=pd.DataFrame()
-                                print("COLS",cols)
-                                for i in range(cols):
-                                    col=data.iloc[:,i]
-                                    dataCopy = pd.concat((dataCopy, col), axis=0)
-                                dataCopy.columns=['Total']
-                                dataCopy.reset_index(inplace = True)
-                                dataCopy = dataCopy.iloc[:, 1:]
-                                # print("VALHALA")
-                                # print(dataCopy)
-                                table_category = tableCategory(
-                                    data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
-                                yearsCol=yearsCol.to_list()
-                                # print(type(yearsCol))
-                                # print(yearsCol)
-                                # print(len(yearsCol))
+                                elif len(totalInd)>0:
+                                    print(data)
+                                    table_categoryList=[]
+                                    yearsColList=[]
+                                    cols=data.shape[1]
+                                    rows=data.shape[0]
+                                    dataCopy=pd.DataFrame()
+                                    print("COLS",cols)
+                                    for i in range(cols):
+                                        col=data.iloc[:,i]
+                                        dataCopy = pd.concat((dataCopy, col), axis=0)
+                                    try:
+                                        dataCopy.columns=['Total']
+                                    except:
+                                        dataCopy=pd.DataFrame
+                                    dataCopy.reset_index(inplace = True)
+                                    dataCopy = dataCopy.iloc[:, 1:]
+                                    # print("VALHALA")
+                                    # print(dataCopy)
+                                    table_category = tableCategory(
+                                        data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
+                                    yearsCol=yearsCol.to_list()
+                                    # print(type(yearsCol))
+                                    # print(yearsCol)
+                                    # print(len(yearsCol))
 
-                                if("year" in headingsRawData[0].lower()):
-                                    headingsRawData.pop(0)
-                                if("year" in headingsRaw[0].lower()):
-                                    headingsRaw.pop(0)
+                                    if("year" in headingsRawData[0].lower()):
+                                        headingsRawData.pop(0)
+                                    if("year" in headingsRaw[0].lower()):
+                                        headingsRaw.pop(0)
 
-                                print(totalInd)
-                                print(headingsRawData)
-                                print(cols)
-                                for i in range(cols):
-                                    for j in range(rows):
-                                        yearsColList.append(list(yearsCol)[j])
-                                        if(len(headingsRawData)==cols):
-                                            table_categoryList.append(headingsRawData[i])
-                                        elif(len(headingsRawClone)==cols):
-                                            table_categoryList.append(headingsRawClone[i])
-                                        else:
-                                            table_categoryList.append(table_category)
-                                print(len(yearsColList))
-                                # print(dataCopy)
-                                if (list(dataCopy.columns)).count("Due Year") == 0:
-                                    dataCopy.insert(loc=0, column='Due Year',
-                                                value=yearsColList)
-                                dataCopy.insert(loc=0, column='State', value=state)
-                                dataCopy.insert(loc=0, column='Table ID', value=table_id)
-                                dataCopy.insert(loc=0, column='Table Category',
-                                            value=table_categoryList)
-                                data=dataCopy.copy()
-                                print("TOTAL DATA")
-                                print(data)
-                                finalData = pd.concat(
-                                            (finalData, data), axis=0)
-                                    
+                                    print(totalInd)
+                                    print(headingsRawData)
+                                    print(cols)
+                                    for i in range(cols):
+                                        for j in range(rows):
+                                            yearsColList.append(list(yearsCol)[j])
+                                            if(len(headingsRawData)==cols):
+                                                table_categoryList.append(headingsRawData[i])
+                                            elif(len(headingsRawClone)==cols):
+                                                table_categoryList.append(headingsRawClone[i])
+                                            else:
+                                                table_categoryList.append(table_category)
+                                    print(len(yearsColList))
+                                    # print(dataCopy)
+                                    if (list(dataCopy.columns)).count("Due Year") == 0:
+                                        dataCopy.insert(loc=0, column='Due Year',
+                                                    value=yearsColList)
+                                    dataCopy.insert(loc=0, column='State', value=state)
+                                    dataCopy.insert(loc=0, column='Table ID', value=table_id)
+                                    dataCopy.insert(loc=0, column='Table Category',
+                                                value=table_categoryList)
+                                    data=dataCopy.copy()
+                                    print("TOTAL DATA")
+                                    print(data)
+                                    finalData = pd.concat(
+                                                (finalData, data), axis=0)
+                                        
 
-                        if len(principalInd) == 1:
-                            x = data.iloc[:, :principalInd[0]-1]
-                            y = data.iloc[:, principalInd[0]-1:]
-                            print(x)
-                            print(y)
-                            print("HEY")
-                            if(x.empty == False):
-                                numberTables += 1
-                            if(y.empty == False):
-                                numberTables += 1
-
-                            if x.empty == False:
-                                table_category = tableCategory(
-                                    data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
-                                if (list(x.columns)).count("Due Year") == 0:
-                                    x.insert(loc=0, column='Due Year',
-                                            value=yearsCol)
-                                x.insert(loc=0, column='State', value=state)
-                                x.insert(loc=0, column='Table ID', value=table_id)
-                                x.insert(loc=0, column='Table Category',
-                                        value=table_category)
+                            if len(principalInd) == 1:
+                                x = data.iloc[:, :principalInd[0]-1]
+                                y = data.iloc[:, principalInd[0]-1:]
                                 print(x)
-                                print("MULTIPLE TABLES", multipleTables(x))
-                                print("X1")
-                                if(multipleTables(x) == False):
-                                    try:
-                                        finalData = pd.concat(
-                                            (finalData, x), axis=0)
-                                    except:
-                                        pass
-                                print(table_category)
-                                print(numberTables)
-
-                                print("FINAL DATA")
-                            if y.empty == False:
                                 print(y)
-                                table_category = tableCategory(
-                                    data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
-                                if (list(y.columns)).count("Due Year") == 0:
-                                    y.insert(loc=0, column='Due Year',
-                                            value=yearsCol)
-                                y.insert(loc=0, column='State', value=state)
-                                y.insert(loc=0, column='Table ID', value=table_id)
-                                y.insert(loc=0, column='Table Category',
-                                        value=table_category)
-                                print(table_category)
-                                print(numberTables)
-                                print("MULTIPLE TABLES", multipleTables(y))
-                                print("Y1")
-                                if(multipleTables(y) == False):
-                                    try:
-                                        finalData = pd.concat(
-                                            (finalData, y), axis=0)
-                                    except:
-                                        pass
-
-                        else:
-                            for i in range(0, len(principalInd)-1, 1):
-                                a = principalInd[i]
-                                b = principalInd[i+1]
-                                x = data.iloc[:, :a-1]
-                                y = data.iloc[:, a-1:b-1]
-                                z = data.iloc[:, principalInd[-1]-1:]
+                                print("HEY")
                                 if(x.empty == False):
                                     numberTables += 1
                                 if(y.empty == False):
-                                    numberTables += 1
-                                if (z.empty == False):
                                     numberTables += 1
 
                                 if x.empty == False:
@@ -1591,68 +1651,129 @@ for ll in range(len(states)):
                                         x.insert(loc=0, column='Due Year',
                                                 value=yearsCol)
                                     x.insert(loc=0, column='State', value=state)
-                                    x.insert(loc=0, column='Table ID',
-                                            value=table_id)
+                                    x.insert(loc=0, column='Table ID', value=table_id)
                                     x.insert(loc=0, column='Table Category',
                                             value=table_category)
-
-                                    print(table_category)
-                                    print(numberTables)
                                     print(x)
                                     print("MULTIPLE TABLES", multipleTables(x))
-                                    print("X")
+                                    print("X1")
                                     if(multipleTables(x) == False):
                                         try:
                                             finalData = pd.concat(
                                                 (finalData, x), axis=0)
                                         except:
                                             pass
+                                    print(table_category)
+                                    print(numberTables)
 
+                                    print("FINAL DATA")
                                 if y.empty == False:
+                                    print(y)
                                     table_category = tableCategory(
                                         data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
-                                    print(list(y.columns))
                                     if (list(y.columns)).count("Due Year") == 0:
                                         y.insert(loc=0, column='Due Year',
                                                 value=yearsCol)
                                     y.insert(loc=0, column='State', value=state)
-                                    y.insert(loc=0, column='Table ID',
-                                            value=table_id)
+                                    y.insert(loc=0, column='Table ID', value=table_id)
                                     y.insert(loc=0, column='Table Category',
                                             value=table_category)
                                     print(table_category)
                                     print(numberTables)
                                     print("MULTIPLE TABLES", multipleTables(y))
-                                    print("Y")
+                                    print("Y1")
                                     if(multipleTables(y) == False):
                                         try:
-                                            finalData = pd.concat((finalData, y), axis=0)
+                                            finalData = pd.concat(
+                                                (finalData, y), axis=0)
                                         except:
                                             pass
-                                    print(y)
 
-                                if z.empty == False:
-                                    table_category = tableCategory(
-                                        data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 2)
-                                    if (list(z.columns)).count("Due Year") == 0:
-                                        z.insert(loc=0, column='Due Year',
-                                                value=yearsCol)
-                                    z.insert(loc=0, column='State', value=state)
-                                    z.insert(loc=0, column='Table ID',
-                                            value=table_id)
-                                    z.insert(loc=0, column='Table Category',
-                                            value=table_category)
-                                    print(table_category)
-                                    print(numberTables)
-                                    print("MULTIPLE TABLES", multipleTables(z))
-                                    print("Z")
-                                    if(multipleTables(z) == False and len(principalInd) >= 2):
-                                        try:
-                                            finalData = pd.concat((finalData, z), axis=0)
-                                        except:
-                                            pass
-                                    numberTables += 1
-                                    print(z)
+                            else:
+                                for i in range(0, len(principalInd)-1, 1):
+                                    a = principalInd[i]
+                                    b = principalInd[i+1]
+                                    x = data.iloc[:, :a-1]
+                                    y = data.iloc[:, a-1:b-1]
+                                    z = data.iloc[:, principalInd[-1]-1:]
+                                    if(x.empty == False):
+                                        numberTables += 1
+                                    if(y.empty == False):
+                                        numberTables += 1
+                                    if (z.empty == False):
+                                        numberTables += 1
+
+                                    if x.empty == False:
+                                        table_category = tableCategory(
+                                            data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 0)
+                                        if (list(x.columns)).count("Due Year") == 0:
+                                            x.insert(loc=0, column='Due Year',
+                                                    value=yearsCol)
+                                        x.insert(loc=0, column='State', value=state)
+                                        x.insert(loc=0, column='Table ID',
+                                                value=table_id)
+                                        x.insert(loc=0, column='Table Category',
+                                                value=table_category)
+
+                                        print(table_category)
+                                        print(numberTables)
+                                        print(x)
+                                        print("MULTIPLE TABLES", multipleTables(x))
+                                        print("X")
+                                        if(multipleTables(x) == False):
+                                            try:
+                                                finalData = pd.concat(
+                                                    (finalData, x), axis=0)
+                                            except:
+                                                pass
+
+                                    if y.empty == False:
+                                        table_category = tableCategory(
+                                            data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 1)
+                                        print(list(y.columns))
+                                        if (list(y.columns)).count("Due Year") == 0:
+                                            y.insert(loc=0, column='Due Year',
+                                                    value=yearsCol)
+                                        y.insert(loc=0, column='State', value=state)
+                                        y.insert(loc=0, column='Table ID',
+                                                value=table_id)
+                                        y.insert(loc=0, column='Table Category',
+                                                value=table_category)
+                                        print(table_category)
+                                        print(numberTables)
+                                        print("MULTIPLE TABLES", multipleTables(y))
+                                        print("Y")
+                                        if(multipleTables(y) == False):
+                                            try:
+                                                finalData = pd.concat((finalData, y), axis=0)
+                                            except:
+                                                pass
+                                        print(y)
+
+                                    if z.empty == False:
+                                        table_category = tableCategory(
+                                            data, newcolsdict, headingsRaw, numberTables, tableBefore, dataBefore, 2)
+                                        if (list(z.columns)).count("Due Year") == 0:
+                                            z.insert(loc=0, column='Due Year',
+                                                    value=yearsCol)
+                                        z.insert(loc=0, column='State', value=state)
+                                        z.insert(loc=0, column='Table ID',
+                                                value=table_id)
+                                        z.insert(loc=0, column='Table Category',
+                                                value=table_category)
+                                        print(table_category)
+                                        print(numberTables)
+                                        print("MULTIPLE TABLES", multipleTables(z))
+                                        print("Z")
+                                        if(multipleTables(z) == False and len(principalInd) >= 2):
+                                            try:
+                                                finalData = pd.concat((finalData, z), axis=0)
+                                            except:
+                                                pass
+                                        numberTables += 1
+                                        print(z)
+                    except:
+                        data=pd.DataFrame       
 
     print(finalData)
     finalData = finalData.fillna(0)

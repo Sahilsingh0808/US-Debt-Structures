@@ -140,9 +140,10 @@ codes = [
     "gu_guam_",
     "ia_state_of_iowa_"]
 
-year = 2003  # change year here
+year = 2015  # change year here
 # path = "/home/Documents/oliver/"+str(year)
 path1 = "/home/sahil/Dropbox/MigrationData/CAFR_states_output/manualawstables/"+str(year)+"/"
+outputPath="/home/sahil/Dropbox/MigrationData/CAFR_states_output/output/"
 # make a central path
 dataCopy = pd.DataFrame()
 dataBefore = pd.DataFrame()
@@ -544,18 +545,26 @@ def interpolate(data):
     if data.empty == False:
         for i in range(0, len(data_list[0])):
             for j in range(0, len(data_list)):
+                if '0 0' in data_list[j][i]:
+                    data_list[j][i]='0.0'
+                if 'S' in data_list[j][i]:
+                    data_list[j][i]='21291847'
                 # changing null values to 0
-                if data_list[j][i]=='-' or data_list[j][i] == '' or data_list[j][i] == '—' or data_list[j][i] == '......' or data_list[j][i] == '-' or data_list[j][i]=='--' or '................' in data_list[j][i]:
+                if  data_list[j][i]=='-' or data_list[j][i] == '' or data_list[j][i] == '—' or data_list[j][i] == '......' or data_list[j][i] == '-' or data_list[j][i]=='--' or '................' in data_list[j][i]:
                     data_list[j][i] = 0.0
                 if data_list[j][i]=='...............':
                     data_list[j][i] = 0.0
                 # converting string values to numbers
-                if 'S 21291847' in data_list[j][i]:
-                    data_list[j][i]='21291847'
+                
                 try:
                     if i > 0:
+                        if '-' in data_list[j][i]:
+                            data_list[j][i]=0.0
                         data_list[j][i] = str(data_list[j][i].replace(',', ''))
                         data_list[j][i] = str(data_list[j][i].replace('$', ''))
+                        data_list[j][i] = str(data_list[j][i].replace(':', '.'))
+                        data_list[j][i] = str(data_list[j][i].replace(')', ''))
+                        data_list[j][i] = str(data_list[j][i].replace('(', ''))
                         data_list[j][i] = float(data_list[j][i])
                 except:
                     pass
@@ -1682,6 +1691,6 @@ for i in range(len(total)):
         finalDataYear.at[(i), "Total"] = principal[i]+interest[i]+swap[i]
 
 finalDataYear = finalDataYear.iloc[: , 1:]
-finalDataYear.to_excel(path1+str(year)+"_aws.xlsx")
+finalDataYear.to_excel(outputPath+str(year)+"_aws.xlsx")
 
 print(finalDataYear)
