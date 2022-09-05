@@ -29,8 +29,8 @@ import tabula
 
 tables = []
 index = 0
-# states = ["wisconsin"]
-# codes = ["wi_state_of_wisconsin_"]
+# states = ["district_of_columbia"]
+# codes = ["dc_district_of_columbia_"]
 states = [
     "north_carolina",
     "nevada",
@@ -79,7 +79,7 @@ states = [
     "new_jersey",
     "vermont",
     "wisconsin",
-    "district_of_columbia",
+    "columbia",
     "hawaii",
     "alaska",
     "colorado",
@@ -133,14 +133,14 @@ codes = [
     "nj_state_of_new_jersey_",
     "vt_state_of_vermont_",
     "wi_state_of_wisconsin_",
-    "dc_state_of_district_of_columbia_",
+    "dc_district_of_columbia_",
     "hi_state_of_hawaii_",
     "ak_state_of_alaska_",
     "co_state_of_colorado_",
     "gu_guam_",
     "ia_state_of_iowa_"]
 
-year = 2015  # change year here
+year = 2015 # change year here
 # path = "/home/Documents/oliver/"+str(year)
 path1 = "/home/sahil/Dropbox/MigrationData/CAFR_states_output/manualawstables/"+str(year)+"/"
 outputPath="/home/sahil/Dropbox/MigrationData/CAFR_states_output/output/"
@@ -222,11 +222,15 @@ def identify_table(tabdata, yr,state,table_id, threshold):
         findPrincipal = re.search(r"principal", concatStr, re.IGNORECASE)
         findInterest = re.search(r"interest", concatStr, re.IGNORECASE)
         findLeases = re.search(r"leases", concatStr, re.IGNORECASE)
-        if findPrincipal or findInterest or findLeases:
-            return True
-        elif not findPrincipal and not findInterest:
-            return False
-    else:
+        findYear=re.search(r"year",concatStr, re.IGNORECASE)
+        findYears=re.search(r"fiscal years",concatStr, re.IGNORECASE)
+        findTotal=re.search(r"total",concatStr, re.IGNORECASE)
+        if state=="new_york" or state=="pennsylvania" or state=="california":
+            if (findYear!=None and (findPrincipal!=None or findTotal!=None) and findYears==None):
+                return True
+        else:
+            if (findYear!=None and (findPrincipal!=None or findInterest!=None or findTotal!=None) and findYears==None ):
+                return True
         return False
 
 

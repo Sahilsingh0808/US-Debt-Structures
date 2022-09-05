@@ -15,7 +15,7 @@ def equalsAprox(a,b):
     if(a+threshold)>=b and (a-threshold)<=b:
         return True
     return  False
-year=2021
+year=2019
 df = pd.read_excel(
     r'/home/sahil/Dropbox/MigrationData/CAFR_states_output/'+str(year)+'.xlsx')
 df.fillna(0)
@@ -54,9 +54,12 @@ for i in range(len(total)):
         NonZeroesIndex=[]
         row=row[0]
         for j in range(startInd,len(row)):
-            if row[j]>0:
-                checkNonZeroes+=1
-                NonZeroesIndex.append(j)
+            try:
+                if int(row[j])>0:
+                    checkNonZeroes+=1
+                    NonZeroesIndex.append(j)
+            except:
+                pass
         print(checkNonZeroes)
         if checkNonZeroes==1:
             row[TotalInd]=row[NonZeroesIndex[0]]
@@ -68,9 +71,9 @@ for i in range(len(total)):
             row[NonZeroesIndex[0]]=0
             row[NonZeroesIndex[1]]=0
         if checkNonZeroes==3:
-            a=row[NonZeroesIndex[0]]
-            b=row[NonZeroesIndex[1]]
-            c=row[NonZeroesIndex[2]]
+            a=int(row[NonZeroesIndex[0]])
+            b=int(row[NonZeroesIndex[1]])
+            c=int(row[NonZeroesIndex[2]])
             if equalsAprox((a+b),c):
                 row[PrincipalInd]=a
                 row[InterestInd]=b
@@ -131,50 +134,53 @@ for i in range(len(total)):
             d=row[NonZeroesIndex[3]]
             e=row[NonZeroesIndex[4]]
             f=row[NonZeroesIndex[5]]
-            if (a+b)==c:
-                rowCopy=row.copy()
-                row[PrincipalInd]=a
-                row[InterestInd]=b
-                row[TotalInd]=c
-                row[NonZeroesIndex[0]]=0
-                row[NonZeroesIndex[1]]=0
-                row[NonZeroesIndex[2]]=0
-                rowCopy[PrincipalInd]=d
-                rowCopy[InterestInd]=e
-                rowCopy[TotalInd]=f
-                rowCopy[NonZeroesIndex[0]]=0
-                rowCopy[NonZeroesIndex[1]]=0
-                rowCopy[NonZeroesIndex[2]]=0
-                rowCopy[NonZeroesIndex[3]]=0
-                rowCopy[NonZeroesIndex[4]]=0
-                rowCopy[NonZeroesIndex[5]]=0
-                rowsList.append(rowCopy)
-            else:
-                rowCopy1=row.copy()
-                rowCopy2=row.copy()
-                row[PrincipalInd]=a
-                row[InterestInd]=b
-                row[TotalInd]=a+b
-                row[NonZeroesIndex[0]]=0
-                row[NonZeroesIndex[1]]=0
-                rowCopy1[PrincipalInd]=c
-                rowCopy1[InterestInd]=d
-                rowCopy1[TotalInd]=d+c
-                rowCopy1[NonZeroesIndex[0]]=0
-                rowCopy1[NonZeroesIndex[1]]=0
-                rowCopy1[NonZeroesIndex[2]]=0
-                rowCopy1[NonZeroesIndex[3]]=0
-                rowCopy2[PrincipalInd]=e
-                rowCopy2[InterestInd]=f
-                rowCopy2[TotalInd]=f+e
-                rowCopy2[NonZeroesIndex[0]]=0
-                rowCopy2[NonZeroesIndex[1]]=0
-                rowCopy2[NonZeroesIndex[2]]=0
-                rowCopy2[NonZeroesIndex[3]]=0
-                rowCopy2[NonZeroesIndex[4]]=0
-                rowCopy2[NonZeroesIndex[5]]=0
-                rowsList.append(rowCopy1)
-                rowsList.append(rowCopy2)
+            try:
+                if (a+b)==c:
+                    rowCopy=row.copy()
+                    row[PrincipalInd]=a
+                    row[InterestInd]=b
+                    row[TotalInd]=c
+                    row[NonZeroesIndex[0]]=0
+                    row[NonZeroesIndex[1]]=0
+                    row[NonZeroesIndex[2]]=0
+                    rowCopy[PrincipalInd]=d
+                    rowCopy[InterestInd]=e
+                    rowCopy[TotalInd]=f
+                    rowCopy[NonZeroesIndex[0]]=0
+                    rowCopy[NonZeroesIndex[1]]=0
+                    rowCopy[NonZeroesIndex[2]]=0
+                    rowCopy[NonZeroesIndex[3]]=0
+                    rowCopy[NonZeroesIndex[4]]=0
+                    rowCopy[NonZeroesIndex[5]]=0
+                    rowsList.append(rowCopy)
+                else:
+                    rowCopy1=row.copy()
+                    rowCopy2=row.copy()
+                    row[PrincipalInd]=a
+                    row[InterestInd]=b
+                    row[TotalInd]=a+b
+                    row[NonZeroesIndex[0]]=0
+                    row[NonZeroesIndex[1]]=0
+                    rowCopy1[PrincipalInd]=c
+                    rowCopy1[InterestInd]=d
+                    rowCopy1[TotalInd]=d+c
+                    rowCopy1[NonZeroesIndex[0]]=0
+                    rowCopy1[NonZeroesIndex[1]]=0
+                    rowCopy1[NonZeroesIndex[2]]=0
+                    rowCopy1[NonZeroesIndex[3]]=0
+                    rowCopy2[PrincipalInd]=e
+                    rowCopy2[InterestInd]=f
+                    rowCopy2[TotalInd]=f+e
+                    rowCopy2[NonZeroesIndex[0]]=0
+                    rowCopy2[NonZeroesIndex[1]]=0
+                    rowCopy2[NonZeroesIndex[2]]=0
+                    rowCopy2[NonZeroesIndex[3]]=0
+                    rowCopy2[NonZeroesIndex[4]]=0
+                    rowCopy2[NonZeroesIndex[5]]=0
+                    rowsList.append(rowCopy1)
+                    rowsList.append(rowCopy2)
+            except:
+                pass
                 
         print(row)
         df.iloc[i]=row
@@ -186,4 +192,4 @@ df=df.iloc[:,1:9]
 print(df)
             
 df.to_excel(
-    "/home/sahil/Dropbox/MigrationData/CAFR_states_output/"+str(year)+"_cleaned.xlsx")
+    "/home/sahil/Dropbox/MigrationData/CAFR_states_output/cleaned/"+str(year)+".xlsx")

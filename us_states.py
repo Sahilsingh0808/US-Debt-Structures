@@ -29,8 +29,8 @@ import tabula
 
 tables = []
 index = 0
-# states = ["new_york"]
-# codes = ["ny_state_of_new_york_"]
+# states = ["maryland"]
+# codes = ["md_state_of_maryland_"]
 states = [
     "north_carolina",
     "nevada",
@@ -79,7 +79,7 @@ states = [
     "new_jersey",
     "vermont",
     "wisconsin",
-    "district_of_columbia",
+    "columbia",
     "hawaii",
     "alaska",
     "colorado",
@@ -133,14 +133,14 @@ codes = [
     "nj_state_of_new_jersey_",
     "vt_state_of_vermont_",
     "wi_state_of_wisconsin_",
-    "dc_state_of_district_of_columbia_",
+    "dc_district_of_columbia_",
     "hi_state_of_hawaii_",
     "ak_state_of_alaska_",
     "co_state_of_colorado_",
     "gu_guam_",
     "ia_state_of_iowa_"]
 
-year = 2004  # change year here
+year = 2020 # change year here
 path = "/home/sahil/Documents/oliver/"+str(year)
 path1 = "/home/sahil/Dropbox/MigrationData/CAFR_states_output/"
 # make a central path
@@ -168,7 +168,7 @@ def identify_table(tabdata, yr,state,table_id, threshold):
     state=state.lower()
     if yr==2017 and state=="california" and (table_id=="id_p145_1" or table_id=="id_p149_1" or table_id=="id_p153_1" ):
         return True
-    if yr==2017 and state=="district_of_columbia" and (table_id=="id_p123_8" or table_id=="id_p123_9" or table_id=="id_p123_7"
+    if yr==2017 and state=="columbia" and (table_id=="id_p123_8" or table_id=="id_p123_9" or table_id=="id_p123_7"
      or table_id=="id_p123_6"  or table_id=="id_p123_5" or table_id=="id_p123_4" or table_id=="id_p124_2"  or table_id=="id_p124_0" or table_id=="id_p124_1"
      or table_id=="id_p128_1"  or table_id=="id_p129_0" or table_id=="id_p124_1"):
         return True
@@ -211,22 +211,23 @@ def identify_table(tabdata, yr,state,table_id, threshold):
     d_mattable = freq > threshold
     # print(d_mattable)
     if d_mattable:
-        concatStr = ""
-        rowC = tabdata.shape[0]
-        if rowC>5:
-            rowC=5
-        colC = len(tabdata.columns)
-        for k in range(0, rowC):
-            row = tabdata.iloc[k].to_list()
-            for l in range(0, len(row)):
-                concatStr += str(row[l]).lower()+" "
-        findPrincipal = re.search(r"principal", concatStr, re.IGNORECASE)
-        findInterest = re.search(r"interest", concatStr, re.IGNORECASE)
-        findLeases = re.search(r"leases", concatStr, re.IGNORECASE)
+        # concatStr = ""
+        # rowC = tabdata.shape[0]
+        # if rowC>5:
+        #     rowC=5
+        # colC = len(tabdata.columns)
+        # for k in range(0, rowC):
+        #     row = tabdata.iloc[k].to_list()
+        #     for l in range(0, len(row)):
+        #         concatStr += str(row[l]).lower()+" "
+        # findPrincipal = re.search(r"principal", concatStr, re.IGNORECASE)
+        # findInterest = re.search(r"interest", concatStr, re.IGNORECASE)
+        # findLeases = re.search(r"leases", concatStr, re.IGNORECASE)
         # if findPrincipal or findInterest or findLeases:
-        return True
+            # return True
         # elif not findPrincipal and not findInterest:
         #     return False
+        return True
     else:
         concatStr = ""
         rowC = tabdata.shape[0]
@@ -238,8 +239,9 @@ def identify_table(tabdata, yr,state,table_id, threshold):
         findPrincipal = re.search(r"principal", concatStr, re.IGNORECASE)
         findInterest = re.search(r"interest", concatStr, re.IGNORECASE)
         findLeases = re.search(r"leases", concatStr, re.IGNORECASE)
-        findYear=re.search(r"fiscal year",concatStr, re.IGNORECASE)
+        findYear=re.search(r"year",concatStr, re.IGNORECASE)
         findYears=re.search(r"fiscal years",concatStr, re.IGNORECASE)
+        findTotal=re.search(r"total",concatStr, re.IGNORECASE)
         # print("CHECK")
         # print(type(findYears))
         # print(findYear)
@@ -258,11 +260,16 @@ def identify_table(tabdata, yr,state,table_id, threshold):
         print(len(data_list))
         if count>0.5*len(data_list):
             checkFirstColumn=True
+        # print(findYear!=None)
+        # print(findPrincipal!=None)
+        # print(findTotal!=None)
+        # print(findYears==None)
+        # print(checkFirstColumn)
         if state=="new_york" or state=="pennsylvania" or state=="california":
-            if (findYear!=None and (findPrincipal!=None ) and findYears==None and checkFirstColumn==True):
+            if (findYear!=None and (findPrincipal!=None or findTotal!=None) and findYears==None and checkFirstColumn==True):
                 return True
         else:
-            if (findYear!=None and (findPrincipal!=None or findInterest!=None) and findYears==None and checkFirstColumn==True):
+            if (findYear!=None and (findPrincipal!=None or findInterest!=None or findTotal!=None) and findYears==None and checkFirstColumn==True):
                 return True
         return False
 
@@ -567,6 +574,8 @@ def correct_numbers_table(data):
                 pass
                 # print(i, j, "ERR")
                 # print(str(data[i][j]))
+    print("CORRECT NUMBER TABLE")
+    print(data)
     return data
 
 
@@ -1069,6 +1078,8 @@ def checkYearMultiple(data):
         data = correct_numbers_table(data)
         data = correct_numbers_table(data)
         # print(data)
+    print("CHECK YEAR MULTIPLE")
+    print(data)
     return data
 
 
@@ -1187,6 +1198,9 @@ for ll in range(len(states)):
             table_id = get_table_id(filenames[i])
             tableIDList.append(table_id)
             tables.append(data)
+            print(table_id)
+            with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+                print(data)
             # filenames1 = next(walk(
             #     r'home/sahilsingh/Dropbox/MigrationData/CAFR_states_output/'+str(year)+'/doc'), (None, None, []))[2]
             # doc=""
@@ -1409,7 +1423,7 @@ for ll in range(len(states)):
                         # print(data)
                         data = checkMultipleDots(data)
                     except:
-                        data=pd.DataFrame()
+                        data=data
                     
                     print(data)
 
@@ -1437,7 +1451,8 @@ for ll in range(len(states)):
                     try:
                         data = interpolate(data)
                     except:
-                        data=pd.DataFrame()
+                        print("ERROR IN INTERPOLATING")
+                        data=data
                     # print(data)
 
                     # mattype=[]
@@ -1451,7 +1466,8 @@ for ll in range(len(states)):
                     try:
                         data = data.astype(float)
                     except:
-                        data=pd.DataFrame()
+                        print("ERROR IN CONVERTING TO FLOAT")
+                        data=data
                     # format headings name
 
                     # if newcolsdict[0]=="":
@@ -1773,7 +1789,7 @@ for ll in range(len(states)):
                                         numberTables += 1
                                         print(z)
                     except:
-                        data=pd.DataFrame       
+                        data=data     
 
     print(finalData)
     finalData = finalData.fillna(0)
@@ -1790,9 +1806,12 @@ total = list(finalDataYear['Total'])
 principal = list(finalDataYear['Principal'])
 swap = list(finalDataYear['Swap Net Payment'])
 interest = list(finalDataYear['Interest'])
-for i in range(len(total)):
-    if total[i] == 0:
-        finalDataYear.at[(i), "Total"] = principal[i]+interest[i]+swap[i]
+try:
+    for i in range(len(total)):
+        if total[i] == 0:
+            finalDataYear.at[(i), "Total"] = principal[i]+interest[i]+swap[i]
+except:
+    pass
 
 finalDataYear = finalDataYear.iloc[: , 1:]
 finalDataYear.to_excel(path1+str(year)+".xlsx")
